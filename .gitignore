@@ -2,3 +2,10 @@ node_modules/
 venv/
 .DS_Store
 .env
+
+<<<<<<< HEAD
+.env
+=======
+.npm-cache
+
+>>>>>>> nov9
