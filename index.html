@@ -2,196 +2,923 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Aashna • Terminal</title>
+  <title>Portfolio Terminal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#0b0f12; --panel:#0e1419; --text:#e6f1ff; --muted:#8aa0b3; --accent:#51d0ff; --link:#9be7ff; --danger:#ff7b7b; }
+    :root {
+      --bg:#040404;
+      --glass:#0b0b0f;
+      --panel:#101013;
+      --text:#f0e6d2;
+      --muted:#a79c8c;
+      --accent:#f3d196;
+      --link:#f7dca9;
+      --danger:#ff8c7b;
+      --scanline:rgba(255,255,255,0.03);
+      --glow:rgba(243,209,150,0.12);
+    }
     * { box-sizing: border-box }
-    html, body { height:100%; margin:0; background:var(--bg); color:var(--text); font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 16px; height:100%; display:flex; flex-direction:column; gap:12px }
-    header { display:flex; align-items:center; justify-content:space-between }
-    header .brand { color: var(--accent); font-weight:700; letter-spacing:.5px }
-    header .btns { display:flex; gap:8px }
+    ::selection { background:rgba(243,209,150,0.25); color:var(--text); }
+    html, body {
+      height:100%;
+      margin:0;
+      background:radial-gradient(circle at top, rgba(243,209,150,0.04), transparent 55%), var(--bg);
+      color:var(--text);
+      font:17px/1.6 'Courier Prime','IBM Plex Mono','Source Code Pro',monospace;
+      letter-spacing:0.35px;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    strong { font-family:'Courier Prime','IBM Plex Mono','Source Code Pro',monospace; font-weight:700; letter-spacing:0.25px; }
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      background:repeating-linear-gradient(0deg, transparent 0, transparent 2px, var(--scanline) 2px, var(--scanline) 4px);
+      pointer-events:none;
+      opacity:0.35;
+      mix-blend-mode:screen;
+    }
+    body::after {
+      content:"";
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at top center, rgba(255,255,255,0.18), transparent 70%);
+      mix-blend-mode:overlay;
+      pointer-events:none;
+      opacity:0.12;
+    }
+    .wrap {
+      max-width:960px;
+      margin:0 auto;
+      padding:48px 24px 32px;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    .chrome {
+      border-radius:18px;
+      background:linear-gradient(150deg, rgba(32,28,22,0.92), rgba(10,10,12,0.92));
+      box-shadow:0 40px 120px rgba(0,0,0,0.6), inset 0 0 24px rgba(243,209,150,0.05);
+      border:1px solid rgba(243,209,150,0.12);
+      display:flex;
+      flex-direction:column;
+      flex:1;
+      overflow:hidden;
+      position:relative;
+    }
+    .chrome::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg, rgba(243,209,150,0.08), transparent 30%, rgba(243,209,150,0.05));
+      opacity:0.18;
+      pointer-events:none;
+    }
+    header {
+      position:relative;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 20px 12px;
+      background:rgba(12,12,18,0.9);
+      border-bottom:1px solid rgba(243,209,150,0.14);
+      box-shadow:0 10px 30px rgba(0,0,0,0.35);
+    }
+    .leds {
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .led {
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.65), rgba(255,80,80,0.7));
+      box-shadow:0 0 8px rgba(255,80,80,0.65);
+    }
+    .led:nth-child(2) {
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.65), rgba(255,193,59,0.7));
+      box-shadow:0 0 8px rgba(255,193,59,0.6);
+    }
+    .led:nth-child(3) {
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), rgba(140,235,167,0.75));
+      box-shadow:0 0 8px rgba(140,235,167,0.6);
+    }
+    header .brand {
+      color:var(--accent);
+      font-size:22px;
+      letter-spacing:1.5px;
+      text-shadow:0 0 6px rgba(243,209,150,0.4);
+      font-family:'VT323','Courier Prime',monospace;
+    }
+    header .btns {
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
     button, .pill {
-      background: var(--panel); color:var(--text); border:1px solid #1c2733; border-radius:10px; padding:6px 10px; cursor:pointer;
+      background:rgba(15,15,20,0.7);
+      color:var(--text);
+      border:1px solid rgba(250,220,180,0.18);
+      border-radius:999px;
+      padding:6px 14px;
+      cursor:pointer;
+      font:16px 'Courier Prime','IBM Plex Mono',monospace;
+      transition:all .2s ease;
+      backdrop-filter:blur(6px);
     }
-    button:hover, .pill:hover { border-color:#2b3a4e }
-    a { color: var(--link); text-decoration: underline }
+    button:hover, .pill:hover {
+      border-color:rgba(250,220,180,0.35);
+      box-shadow:0 0 12px rgba(243,209,150,0.24);
+    }
+    .pill {
+      opacity:0.65;
+    }
     .terminal {
-      flex:1; overflow:auto; background: radial-gradient(1200px 600px at 20% 10%, rgba(81,208,255,.06), transparent 40%) , linear-gradient(#0c1217,#0b0f12);
-      border:1px solid #13202c; border-radius:16px; padding:16px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02), 0 10px 30px rgba(0,0,0,.25);
+      flex:1;
+      position:relative;
+      border:1px solid rgba(243,209,150,0.14);
+      border-radius:16px;
+      background:rgba(8,8,12,0.75);
+      padding:24px;
+      overflow:auto;
     }
-    .line { white-space:pre-wrap; word-break:break-word; margin: 0 0 8px 0 }
-    .sys { color: var(--muted) }
-    .user::before { content: "➜ "; color: var(--accent) }
-    .assistant { }
-    .danger { color: var(--danger) }
+    .terminal::-webkit-scrollbar {
+      width:6px;
+      background:rgba(255,255,255,0.05);
+    }
+    .terminal::-webkit-scrollbar-thumb {
+      background:rgba(243,209,150,0.2);
+      border-radius:3px;
+    }
+    .line {
+      white-space:pre-wrap;
+      word-break:break-word;
+      margin:0 0 12px 0;
+      position:relative;
+    }
+    .line::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      opacity:0;
+      transition:opacity .3s ease;
+      background:rgba(243,209,150,0.04);
+      pointer-events:none;
+    }
+    .line:hover::after { opacity:1; }
+    .sys { color:var(--muted) }
+    .prompt-tag { color:var(--accent); margin-right:10px; display:inline-block; }
+    .assistant { color:var(--text); text-shadow:0 0 6px rgba(243,209,150,0.08); }
+    .assistant.streaming::after { display:none; }
+    .danger { color:var(--danger) }
     .prompt {
-      display:flex; gap:8px; background: var(--panel); border:1px solid #1c2733; border-radius:12px; padding:10px;
-      align-items:center
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:16px 22px;
+      border:1px solid rgba(243,209,150,0.16);
+      border-radius:14px;
+      background:rgba(10,10,12,0.88);
+      font-size:20px;
+      box-shadow:0 18px 40px rgba(0,0,0,0.55);
+      margin:18px 22px 26px;
+    }
+    .prompt-prefix {
+      color:var(--accent);
+      white-space:nowrap;
     }
     .prompt input {
-      flex:1; background:transparent; border:none; outline:none; color:var(--text); font:inherit
+      flex:1;
+      background:transparent;
+      border:none;
+      outline:none;
+      color:var(--text);
+      font:inherit;
+      caret-color:var(--accent);
     }
-    .caret { width:8px; height:1.2em; background:var(--text); animation: blink 1.2s steps(1) infinite; margin-left:2px }
-    @keyframes blink { 50% { opacity: 0 } }
-    .kbd { color:#b7c9d9; background:#0b1218; border:1px solid #1e2a35; border-radius:6px; padding:0 6px; margin:0 2px }
-    .footer { color:var(--muted); font-size:12px; text-align:center; opacity:.8 }
-    .right { float:right }
-    .small { font-size:12px }
+    .caret {
+      width:9px;
+      height:1.3em;
+      background:var(--accent);
+      animation:blink 1.1s steps(1) infinite;
+      box-shadow:0 0 6px rgba(243,209,150,0.7);
+    }
+    @keyframes blink { 50% { opacity:0; } }
+    .kbd {
+      color:var(--text);
+      background:rgba(15,15,20,0.55);
+      border:1px solid rgba(243,209,150,0.18);
+      border-radius:8px;
+      padding:2px 6px;
+      margin:0 2px;
+      opacity:0.6;
+    }
+    .hints {
+      position:absolute;
+      bottom:120px;
+      right:24px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      font-size:16px;
+      z-index:2;
+    }
+    .hint {
+      background:rgba(25,25,30,0.72);
+      border:1px solid rgba(243,209,150,0.16);
+      color:var(--text);
+      border-radius:14px;
+      padding:6px 12px;
+      opacity:0.7;
+      backdrop-filter:blur(6px);
+      transition:opacity .2s ease, border-color .2s ease;
+    }
+    .hint:hover {
+      opacity:0.95;
+      border-color:rgba(243,209,150,0.32);
+    }
+    a { color:var(--link); text-decoration:underline; }
+    .footer {
+      color:var(--muted);
+      font-size:14px;
+      text-align:center;
+      opacity:0.78;
+      letter-spacing:1px;
+    }
+    .small { font-size:14px }
     .hidden { display:none }
-    dialog {
-      border:1px solid #213040; border-radius:14px; background:#0e1419; color:var(--text); padding:16px; width:min(600px, 92vw)
+    @media (max-width:720px) {
+      .wrap { padding:32px 16px; }
+      header { flex-direction:column; gap:14px; align-items:flex-start; }
+      .hints { position:static; flex-direction:row; flex-wrap:wrap; justify-content:center; padding:0 20px 16px; margin-top:12px; }
+      .prompt { flex-wrap:wrap; gap:8px; padding:14px 16px; margin:16px; }
+      .prompt-prefix { font-size:18px; }
     }
-    dialog::backdrop { background: rgba(0,0,0,.6) }
-    .row { display:flex; gap:8px; align-items:center; margin:8px 0 }
-    input[type="password"], input[type="text"] {
-      background:#0b1116; border:1px solid #1c2733; color:var(--text); border-radius:8px; padding:8px; width:100%; font:inherit
-    }
-    .badge { border:1px solid #1f2c3a; border-radius:999px; padding:2px 8px; color:#b8c6d8 }
-    .linkish { color:var(--link); cursor:pointer; text-decoration: underline }
   </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="chrome">
   <header>
-    <div class="brand">Aashna ▓▒░ Terminal</div>
+      <div class="leds">
+        <span class="led"></span>
+        <span class="led"></span>
+        <span class="led"></span>
+      </div>
+    <div class="brand">Aashna's Portfolio Terminal</div>
     <div class="btns">
-      <span class="badge small">type <span class="kbd">help</span></span>
+        <span class="pill small">type <span class="kbd">help</span></span>
       <button id="copyLast">Copy last</button>
-      <button id="settingsBtn">Settings</button>
       <button id="clearBtn">Clear</button>
     </div>
   </header>
 
   <div id="term" class="terminal" aria-live="polite"></div>
 
+
+
+  
   <div class="prompt">
-    <span class="muted">guest@aashna</span>:<span class="muted">~</span>$&nbsp;
-    <input id="input" autocomplete="off" spellcheck="false" placeholder="ask what did you build at the Agents for Impact AI Arena?"/>
+      <span class="prompt-prefix">guest@aashnasportfolio:~$</span>
+      <input id="input" autocomplete="off" spellcheck="false" placeholder="Type a command or type `help` to know more…"/>
     <div class="caret"></div>
+    </div>
   </div>
 
-  <div class="footer small">↑/↓ history • <span class="kbd">Esc</span> focus • <span class="kbd">Ctrl</span>+<span class="kbd">K</span> clear • answers cite your resume / site</div>
+  <div class="footer small">↑/↓ history • <span class="kbd">Esc</span> focus • <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">K</span> clear • answers cite your resume / site</div>
 </div>
 
-<!-- Settings dialog -->
-<dialog id="settings">
-  <form method="dialog">
-    <h3>Settings</h3>
-    <div class="row">
-      <label style="width:160px">OpenAI API Key</label>
-      <input id="apiKey" type="password" placeholder="sk-..." />
-    </div>
-    <div class="row">
-      <label style="width:160px">Model</label>
-      <input id="model" type="text" value="gpt-4o-mini" />
-    </div>
-    <div class="row">
-      <label style="width:160px">Portfolio URL</label>
-      <input id="siteUrl" type="text" value="https://www.aashnakunk.com" />
-    </div>
-    <div class="row">
-      <label style="width:160px">Save key in browser?</label>
-      <span class="small">(for convenience; not secure)</span>
-    </div>
-    <menu style="display:flex; gap:8px; justify-content:flex-end">
-      <button value="cancel">Close</button>
-      <button id="saveSettings" value="default">Save</button>
-    </menu>
-  </form>
-  <p class="small">Tip: For security, use the tiny proxy below instead of storing your key in the browser.</p>
-</dialog>
-
 <script>
-/* ========= 1) Hard-code your resume here (paste real content) ========= */
-const RESUME_MD = `
-# Aashna Kunkolienker — Resume (snapshot)
-**Role:** Associate AI Engineer @ Searce • **Focus:** Agentic AI on Google Cloud (ADK), connectors (ServiceNow, Aha!, Snowflake), RAG, BigQuery, governance  
-**Highlights:** Top-5 finalist at Google Cloud Agents for Impact Arena (team AI-mmunity) presenting at Google Cloud Next ‘26
-
-## Skills
-- Agentic AI: Google ADK/Agent Engine, multi-agent orchestration, RAG, embeddings
-- Data & Cloud: GCP (Vertex AI, BigQuery), Snowflake, AWS (SageMaker), Kubernetes
-- Connectors: ServiceNow CSM, Aha!, Snowflake (ACL-aware ingestion, schema profiling)
-- Languages: Python, TypeScript, SQL
-
-## Experience
-- **Associate AI Engineer — Searce (2025—present)**
-  - Built enterprise search + connectors (ServiceNow, Aha!, Snowflake) with ACL-aware governance.
-  - Designed Snowflake NL2SQL agent (Gemini Enterprise) using schema profiling + value dictionaries.
-  - Customer demos, architecture diagrams, and PoCs for agentic AI workloads on GCP.
-- **Research & Projects (selected)**
-  - **AI-mmunity (Top-5)** — Community health & wellness multi-agent framework; led agentic layer (ADK) and data governance.
-  - **Interior Design Assistant** — ADK-based furniture recommender; image placement + BigQuery embeddings.
-  - **USDM 4.0 Clinical Trial Extractor** — LLM extraction to USDM JSON with nested relations.
-  - **Spiritual AI Companion** — Multi-avatar devotional/horoscope AI with Node/Tailwind & Gemini.
-
-## Education
-- **NYU Tandon** — MS Computer Engineering (2025)
-
-## Certifications
-- Google Cloud PMLE (2025), Generative AI Leader (2025), AWS ML-Specialty (2024), NVIDIA NCA-AIIO (2025), CCNA (2023)
-
-## Links
-- Portfolio: https://www.aashnakunk.com
-- GitHub: https://github.com/aashnakunk
-`;
-
-/* Optional: simple “site map” to turn sections into links */
-const SECTION_LINKS = {
-  about: "https://www.aashnakunk.com/about",
-  projects: "https://www.aashnakunk.com/projects",
+/* ========= 1) Structured knowledge base ========= */
+const KB = {
+  profile: {
+    name: "Aashna Kunkolienker",
+    title: "AI Engineer building agentic workflows",
+    location: "Dublin / SF Bay Area, California",
+    email: "aashnakunk@gmail.com",
+    phone: "+1 (347) 382 4780",
+    summary: [
+      "AI engineer focused on Google ADK/Gemini agentic systems with governance-first enterprise delivery.",
+      "Background spans cloud ML pipelines, multi-agent orchestration, connectors, and GPU acceleration.",
+      "Musician and storyteller who enjoys blending creative tech with user-centric design."
+    ]
+  },
+  socials: {
+    portfolio: "https://www.aashnakunk.com",
+    github: "https://github.com/aashnakunk",
+    linkedin: "https://www.linkedin.com/in/aashnakunk/",
+    medium: "https://medium.com/@aashnakunk",
+    instagram: "https://www.instagram.com/aashnakunk",
+    youtube: "https://www.youtube.com/@aashnakunk"
+  },
+  siteSections: {
+    home: "https://www.aashnakunk.com",
+    about: "https://www.aashnakunk.com/#about",
+  projects: "https://www.aashnakunk.com/s-projects-basic",
+    blogs: "https://www.aashnakunk.com/blogs",
   resume: "https://www.aashnakunk.com/resume",
-  talks: "https://www.aashnakunk.com/talks",
-  blog: "https://www.aashnakunk.com/blog",
+    music: "https://www.aashnakunk.com/music",
   contact: "https://www.aashnakunk.com/contact"
+  },
+  skills: {
+    languages: ["Python", "C/C++", "Java", "JavaScript", "SQL", "CUDA C"],
+    ml: ["LangGraph", "LangChain", "Google ADK", "Gemini Enterprise", "TensorFlow", "PyTorch", "LLMs", "RAG pipelines", "AgentOps"],
+    cloud: ["Google Cloud (Vertex AI, BigQuery)", "AWS (Bedrock, SageMaker)", "Kubernetes", "Spark", "Snowflake"],
+    domains: ["Agentic AI", "RAG", "Enterprise search", "Data connectors", "LLM observability", "Multi-agent systems"]
+  },
+  experiences: [
+    {
+      company: "Searce",
+      role: "AI Engineer",
+      timeline: "Jul 2025 – Present",
+      location: "San Ramon, California",
+      focus: "Agentic AI, RAG pipelines, LLMs, AgentOps, enterprise search",
+      highlights: [
+        "Designed multi-agent workflows on Google ADK + Gemini Enterprise with adaptive context routing and RAG pipelines for enterprise knowledge retrieval.",
+        "Led delivery of enterprise search agents by shipping connectors for ServiceNow, Aha!, Snowflake with ACL-aware governance.",
+        "Building ML + agentic pipelines to improve patient cost estimation accuracy for a dental insurance provider.",
+        "Implemented AgentOps observability and monitoring for production LLM agents, tracking performance, costs, and reliability metrics."
+      ],
+      tags: ["agentic-ai", "connectors", "healthcare", "gcp", "governance", "rag", "llm", "agentops", "ml", "ai"]
+    },
+    {
+      company: "BalanceAI",
+      role: "Founding Software Engineer",
+      timeline: "May 2025 – Jul 2025",
+      location: "San Jose, California (Remote)",
+      focus: "Energy optimization, LangGraph agents",
+      highlights: [
+        "Shipped AWS-backed ML pipeline for HVAC control merging Tuya sensor data with forecasting models.",
+        "Built LangGraph agents for explainable mode switching, improving comfort and energy efficiency."
+      ],
+      tags: ["hvac", "aws", "langgraph", "energy"]
+    },
+    {
+      company: "L&T Technology Services",
+      role: "Software Engineering Intern",
+      timeline: "May 2024 – Aug 2024",
+      location: "Peoria, Illinois",
+      focus: "Game development for FS22 Farming Simulator, AWS infrastructure",
+      highlights: [
+        "Created six Farming Simulator game mods in Lua integrating real-time hardware inputs and C# server-client architecture over AWS.",
+        "Built server-client architecture for a live sprayer cam for John Deere equipment integration."
+      ],
+      tags: ["simulation", "aws", "lua", "game", "game-dev"]
+    },
+    {
+      company: "Nutanix",
+      role: "Systems Reliability Engineer Intern",
+      timeline: "Jan 2023 – Jun 2023",
+      location: "India",
+      focus: "Virtualization, networking",
+      highlights: [
+        "Diagnosed Nutanix AHV / VMware ESXi virtualization issues and tuned networking/routing for customer clusters."
+      ],
+      tags: ["virtualization", "networking"]
+    },
+    {
+      company: "Siemens",
+      role: "Computer Vision Intern",
+      timeline: "Jul 2021 – Aug 2021",
+      location: "India",
+      focus: "OCR automation",
+      highlights: [
+        "Automated serial number recognition using OCR + PowerApps for 500+ devices per day on production lines."
+      ],
+      tags: ["computer-vision", "ocr"]
+    }
+  ],
+  education: [
+    {
+      school: "New York University, Tandon School of Engineering",
+      program: "M.S. in Computer Engineering",
+      timeline: "Sep 2023 – May 2025",
+      gpa: "3.945/4.0",
+      roles: ["Teaching Assistant: Database Systems", "Teaching Assistant: Introduction to Computer Science"]
+    },
+    {
+      school: "Manipal Institute of Technology",
+      program: "B.Tech. in Computer Science (Minor: Machine Learning)",
+      timeline: "Jul 2019 – May 2023",
+      gpa: "9.01/10.0"
+    }
+  ],
+  certifications: [
+    { name: "Google Cloud Professional Machine Learning Engineer", date: "Jul 2025" },
+    { name: "Google Cloud Generative AI Leader", date: "Aug 2025" },
+    { name: "AWS Machine Learning – Specialty", date: "Jul 2024" },
+    { name: "NVIDIA Certified Associate – AI Infrastructure & Operations", date: "Oct 2025" },
+    { name: "Cisco CCNA 200-301", date: "Feb 2023" }
+  ],
+  projects: [
+    {
+      title: "AI-mmunity",
+      subtitle: "Top-5 finalist • Google Cloud Agents for Impact Arena",
+      summary: "End-to-end community health and wellness monitoring platform for health officials and residents. Uses AI-driven insights + multi-agent architecture for real-time public health monitoring, crowdsourced incident reporting (pollution, disease symptoms, food insecurity), and intelligent alerts/dashboards for faster intervention.",
+      tags: ["agentic-ai", "ai", "health", "google-cloud", "personal"]
+    },
+    {
+      title: "Enterprise Search & Connectors",
+      summary: "ServiceNow, Aha!, and Snowflake connectors with ACL-aware governance for enterprise AI agents.",
+      tags: ["connectors", "governance", "snowflake", "servicenow", "ai", "work"]
+    },
+    {
+      title: "Snowflake NL2SQL Agent",
+      summary: "Gemini Enterprise agent using schema profiling and value dictionaries for natural language analytics.",
+      tags: ["snowflake", "nl2sql", "gemini", "gcp", "ai", "work"]
+    },
+    {
+      title: "Interior Design Assistant",
+      summary: "Agentic furniture recommender with image placement guidance and BigQuery embeddings.",
+      tags: ["vision", "recommendation", "adk", "ai", "ml", "work"]
+    },
+    {
+      title: "USDM 4.0 Trial Extractor",
+      summary: "LLM pipeline mapping clinical protocols into FDA-compliant USDM JSON with nested relations.",
+      tags: ["healthcare", "llm", "etl", "ai", "work"]
+    },
+    {
+      title: "Parallel LNDP Feature Extractor (CUDA)",
+      summary: "Co-authored paper on O(1) time complexity algorithm for Local Neighbourhood Difference Pattern (LNDP) feature extraction, accelerating medical image analysis using GPU-based CUDA implementation. Tested on the LISS medical image dataset, achieving massive speedups for feature computation in diagnostic applications like epilepsy detection.",
+      tags: ["cuda", "research", "medical-imaging", "academic", "ml", "personal"]
+    },
+    {
+      title: "Spark-Based NLP Pipeline for Safe LLM Outputs",
+      summary: "Distributed text analysis pipeline using Apache SparkML to detect hate speech and analyze sentiment in large-scale GPT outputs.",
+      tags: ["spark", "nlp", "moderation", "academic", "ml", "ai", "personal"]
+    },
+    {
+      title: "Real-time Parkinson's Tremor Detection System",
+      summary: "Wearable device with STM32 and gyroscopic sensors to detect and classify Parkinsonian tremors in real time.",
+      tags: ["iot", "embedded", "healthcare", "ml", "personal"]
+    },
+    {
+      title: "RISC-V 5-Stage Pipeline Simulator",
+      summary: "Register-based simulation of a 5-stage pipelined RISC-V processor focusing on instruction throughput and hazard mitigation.",
+      tags: ["architecture", "simulation", "academic", "personal"]
+    },
+    {
+      title: "GAN-VIX",
+      summary: "Employed GANs (WGAN, ResNetGAN, AttentionGAN) to generate synthetic CBOE Volatility Index (VIX) data for financial modeling.",
+      tags: ["gan", "finance", "academic", "ml", "ai", "personal"]
+    },
+    {
+      title: "Predictive QoS for V2X Networks with Machine Learning",
+      summary: "ML-based system that predicts mobile network performance for moving vehicles. Using real-world V2X data (signal metrics, GPS, speed, and environment), the model learns patterns in connectivity and forecasts future network quality to help fleets and smart vehicles anticipate low-signal zones, optimize routing, and maintain stable data flow during travel.",
+      tags: ["networking", "ml", "academic", "ai", "personal"]
+    },
+    {
+      title: "Optimized ResNet with SE Blocks",
+      summary: "Custom ResNet with Squeeze-and-Excitation blocks trained on CIFAR-10 using advanced augmentation for improved generalization.",
+      tags: ["cnn", "computer-vision", "academic", "ml", "ai", "personal"]
+    },
+    {
+      title: "Bachman – Music Theory Game",
+      summary: "Playable Pac-Man-style game teaching music note recognition, built in Lua using LÖVE2D and hosted on Firebase.",
+      tags: ["game", "creative", "lua", "game-dev", "personal"]
+    },
+    {
+      title: "AI-Driven PCAP Flow Analyzer",
+      summary: "Web-based AI tool inspecting .pcap files and classifying network flows as normal or suspicious using LLMs.",
+      tags: ["networking", "security", "ai", "llm", "personal"]
+    },
+    {
+      title: "File Read Performance Benchmarking (C/C++)",
+      summary: "Performance benchmarking framework evaluating cached vs. non-cached file reads using custom timing and Google Benchmark.",
+      tags: ["performance", "c++", "academic", "personal"]
+    },
+    {
+      title: "Neural Network from Scratch",
+      summary: "Feedforward neural network implemented from first principles with manual forward/backward propagation in NumPy, verified with PyTorch.",
+      tags: ["ml", "academic", "ai", "deep-learning", "personal"]
+    }
+  ],
+  achievements: [
+    {
+      title: "Winner – Google Cloud Agentic AI Arena Hackathon",
+      detail: "Team AI-mmunity won the Google Cloud Agentic AI Arena; presenting at Google Cloud Next '26. Built an end-to-end community health and wellness monitoring platform using ADK multi-agent orchestration.",
+      link: { label: "LinkedIn announcement", url: "https://www.linkedin.com/posts/aashnakunk_googlecloud-agenticai-googlenext-activity-7392518400419278848-czk2" }
+    },
+    {
+      title: "Manohar Parrikar Goa Scholars Award 2023",
+      detail: "Recognized for academic excellence and contributions to technology.",
+      link: null
+    },
+    {
+      title: "Enterprise connectors",
+      detail: "Led architecture for ServiceNow, Aha!, Snowflake connectors with ACL-aware governance for enterprise search agents.",
+      link: { label: "Enterprise search", url: "https://www.aashnakunk.com/s-projects-basic" }
+    },
+    {
+      title: "CUDA medical imaging research",
+      detail: "Parallel LNDP feature extractor hitting 63,000× speedup on the LISS dataset.",
+      link: { label: "Research", url: "https://www.aashnakunk.com/s-projects-basic" }
+    },
+    {
+      title: "Agent observability feedback",
+      detail: "Partnered with Google's ADK team on tracing, telemetry, and reliability features; authored internal observability guides.",
+      link: { label: "Agent insights", url: "https://www.aashnakunk.com/s-projects-basic" }
+    },
+    {
+      title: "Identity federation troubleshooting",
+      detail: "Resolved Workforce Identity Federation (Entra ID) integration for AgentSpace; published debugging playbooks.",
+      link: { label: "Cloud notes", url: "https://www.aashnakunk.com/projects" }
+    }
+  ],
+  creative: {
+    music: {
+      summary: [
+        "Singer and musician sharing covers that blend Indian classical, pop, and indie influences.",
+        "Music is the creative reset after long AI build cycles."
+      ],
+      links: [
+        { label: "Music hub", url: "https://www.aashnakunk.com/music" },
+        { label: "YouTube", url: "https://www.youtube.com/@aashnakunk" },
+        { label: "Instagram", url: "https://www.instagram.com/aashnakunk" }
+      ]
+    }
+  },
+  narratives: {
+    agentic: [
+      "Designed and deployed multi-agent AI systems on Google’s ADK and Gemini Enterprise (AgentSpace), orchestrating reasoning, tooling, and secure data flows for enterprise workloads.",
+      "Architected pipelines on GCP (Vertex AI Pipelines, Cloud Run, Pub/Sub) covering orchestration, CI/CD, monitoring, and agent-to-agent coordination.",
+      "Developed a multi-agent Interior Design Assistant combining BigQuery embeddings with catalog scraping for room-aware furniture placement.",
+      "Built proof-of-concept agents including a conversational medical assistant (CCAI Playbooks) and a USDM clinical protocol extractor translating docs to FDA-compliant JSON.",
+      "Partnered with Google’s ADK observability initiative to test tracing/telemetry and publish reliability feedback."
+    ],
+    data: [
+      "Led discovery with enterprise clients to map data ecosystems and surface predictive ML opportunities tied to service intelligence.",
+      "Built ACL-aware connectors for ServiceNow, Aha!, Snowflake plus configured native Jira/Confluence connectors in on-prem setups.",
+      "Created governed Snowflake NL2SQL agents enforcing role-based access while serving analytics through ADK + Gemini Enterprise.",
+      "Implemented Spark and AWS-backed pipelines for HVAC forecasting (BalanceAI) and QoS prediction with XGBoost on Berlin V2X data."
+    ]
+  },
+  faqs: [
+    {
+      question: "What are Aashna’s strongest focus areas?",
+      answer: [
+        "Agentic AI on Google ADK/Gemini and LangGraph-based orchestration.",
+        "Enterprise connectors and data governance for ServiceNow, Aha!, Snowflake.",
+        "Cloud-native ML pipelines across GCP (Vertex AI, BigQuery) and AWS (SageMaker/Bedrock)."
+      ],
+      tags: ["focus", "strengths"]
+    },
+    {
+      question: "Is Aashna open to relocation?",
+      answer: [
+        "Currently based between Dublin and the SF Bay Area.",
+        "Open to US opportunities with hybrid flexibility; remote collaborations welcome."
+      ],
+      tags: ["relocation"]
+    },
+    {
+      question: "What does Aashna do outside of work?",
+      answer: [
+        "Writes and performs music covers on YouTube/Instagram.",
+        "Builds playful interactive tech—like this terminal and game mods—to keep experiments fun."
+      ],
+      tags: ["interests", "personal"]
+    }
+  ]
 };
+
+const SECTION_LINKS = KB.siteSections;
+const SITE_URL = KB.socials.portfolio;
 
 /* ========= 2) Minimal terminal shell ========= */
 const term = document.getElementById('term');
 const input = document.getElementById('input');
 const clearBtn = document.getElementById('clearBtn');
 const copyBtn = document.getElementById('copyLast');
-const settingsBtn = document.getElementById('settingsBtn');
-const dlg = document.getElementById('settings');
-const apiKeyEl = document.getElementById('apiKey');
-const modelEl = document.getElementById('model');
-const siteEl = document.getElementById('siteUrl');
-const saveSettingsBtn = document.getElementById('saveSettings');
 
 let history = JSON.parse(localStorage.getItem('hist')||'[]');
 let histIdx = history.length;
 let lastAnswerMD = "";
-let state = {
-  apiKey: localStorage.getItem('openai_key') || "",
-  model: localStorage.getItem('model') || "gpt-4o-mini",
-  siteUrl: localStorage.getItem('site_url') || "https://www.aashnakunk.com"
-};
+let sessionLog = JSON.parse(localStorage.getItem('term_log')||'[]');
 
-function printSys(text){ addLine(text, 'sys'); }
-function printUser(text){ addLine(text, 'user'); }
-function printAssistant(md){ addLine(renderMarkdown(md), 'assistant'); }
-function addLine(text, cls=''){ const div=document.createElement('div'); div.className=`line ${cls}`; div.innerHTML=text; term.appendChild(div); term.scrollTop=term.scrollHeight; }
-function clearTerm(){ term.innerHTML=''; showWelcome(); }
+function escapeHTML(str){
+  return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function printSys(text){ addLine(escapeHTML(text), 'sys'); }
+function printUser(text){
+  addLine(`<span class="prompt-tag">guest@aashnasportfolio:~$</span>${escapeHTML(text)}`, 'user');
+}
+function printAssistant(md, opts={}){ addLine(renderMarkdown(md), 'assistant', opts); }
+function persistLog(){ localStorage.setItem('term_log', JSON.stringify(sessionLog)); }
+
+function addLine(text, cls='', opts={}){
+  const div=document.createElement('div');
+  div.className=`line ${cls}`.trim();
+  term.appendChild(div);
+  const scrollToBottom = ()=>{ term.scrollTop=term.scrollHeight; };
+  if (opts.stream){
+    div.classList.add('streaming');
+    let idx=0;
+    const logIndex = sessionLog.push({ cls, html: "" }) - 1;
+    const interval=setInterval(()=>{
+      div.innerHTML=text.slice(0, idx+1);
+      sessionLog[logIndex].html = div.innerHTML;
+      persistLog();
+      idx++;
+      if (idx>=text.length){
+        clearInterval(interval);
+        div.classList.remove('streaming');
+      }
+      scrollToBottom();
+    }, opts.speed || 12);
+  } else {
+    div.innerHTML=text;
+    sessionLog.push({ cls, html: text });
+    persistLog();
+    scrollToBottom();
+  }
+}
+function clearTerm(){
+  term.innerHTML='';
+  sessionLog = [];
+  persistLog();
+  showWelcome();
+  lastAnswerMD = "";
+  input.focus();
+}
 function showWelcome(){
-  printSys("Aashna Terminal • recruiter Q&A\n");
-  printSys("Try:");
-  printSys("  ask what did you build at the Agents for Impact AI Arena?");
-  printSys("  resume");
-  printSys("  projects snowflake");
-  printSys("  open projects");
+  printSys("Portfolio Terminal • Q&A\n");
+  printSys("Type `help` to see available commands.\n");
 }
 function renderMarkdown(md){
-  // extremely tiny MD renderer: bold, links, bullets, code
   let html = md
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
     .replace(/`(.+?)`/g,'<code>$1</code>')
-    .replace(/^- (.+)$/gm,'• $1')
-    .replace(/\[(.+?)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+    .replace(/^- (.+)$/gm,'• $1');
+  
+  // First, convert markdown links [text](url)
+  html = html.replace(/\[(.+?)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  
+  // Then, convert bare URLs that aren't already inside tags
+  html = html.replace(/(?<!href="|">)(https?:\/\/[^\s<"]+)(?![^<]*<\/a>)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  
   return html;
+}
+
+function bullets(items){ return items.map(x=>`- ${x}`).join('\n'); }
+function projectToLine(project){
+  return `**${project.title}** — ${project.summary}`;
+}
+function experienceToLine(exp){
+  const highlights = exp.highlights.slice(0,2).map(h=>`- ${h}`).join('\n');
+  return `**${exp.role} — ${exp.company} (${exp.timeline})**\n${highlights}`;
+}
+function certificationLine(cert){ return `${cert.name} (${cert.date})`; }
+
+function summarizeProfile(){
+  return [
+    `**${KB.profile.name}** — ${KB.profile.title}`,
+    ...KB.profile.summary.map(line=>`- ${line}`),
+    `- Based in ${KB.profile.location}`,
+    `- [Portfolio](${KB.socials.portfolio}) • [GitHub](${KB.socials.github})`
+  ].join('\n');
+}
+
+function searchProjects(query){
+  const q = query.toLowerCase();
+  return KB.projects.filter(p=>{
+    const haystack = [p.title, p.summary, ...(p.tags||[])].join(" ").toLowerCase();
+    return !q || haystack.includes(q);
+  });
+}
+
+function searchExperience(query){
+  const q = query.toLowerCase();
+  return KB.experiences.filter(exp=>{
+    const haystack = [exp.company, exp.role, exp.focus, ...(exp.tags||[])].join(" ").toLowerCase();
+    return !q || haystack.includes(q);
+  });
+}
+
+function achievementsAnswer(){
+  const url = KB.siteSections.projects;
+  const list = KB.achievements.map(item=>{
+    const linkPart = item.link ? ` • [${item.link.label}](${item.link.url})` : "";
+    return `- **${item.title}** — ${item.detail}${linkPart}`;
+  }).join('\n');
+  return [
+    "**Achievements & highlights**",
+    list,
+    `- Portfolio overview: [${url}](${url})`
+  ].join('\n');
+}
+
+function musicAnswer(){
+  const music = KB.creative.music;
+  return [
+    "**Music & creative side**",
+    bullets(music.summary),
+    music.links.map(link=>`- [${link.label}](${link.url})`).join('\n')
+  ].join('\n');
+}
+
+function agenticFocusAnswer(){
+  return [
+    "**Agentic focus**",
+    bullets(KB.narratives.agentic),
+    "",
+    "**Representative builds**",
+    searchProjects("agentic").slice(0,3).map(projectToLine).join('\n'),
+    `- Agentic portfolio: [${KB.siteSections.projects}](${KB.siteSections.projects})`
+  ].filter(Boolean).join('\n\n');
+}
+
+function dataFocusAnswer(){
+  return [
+    "**Data & connectors focus**",
+    bullets(KB.narratives.data),
+    "",
+    "**Representative builds**",
+    searchProjects("").slice(0,3).map(projectToLine).join('\n'),
+    `- Data builds: [${KB.siteSections.projects}](${KB.siteSections.projects})`
+  ].filter(Boolean).join('\n\n');
+}
+
+function keywordSearchAnswer(query){
+  const tokens = (query.toLowerCase().match(/[a-z0-9]+/g) || []).filter(t=>t.length > 2);
+  if (!tokens.length) return null;
+
+  const matches = [];
+  const scoreText = (text)=>{
+    const lower = text.toLowerCase();
+    return tokens.reduce((acc, token)=> acc + (lower.includes(token) ? 1 : 0), 0);
+  };
+  const addMatches = (items, label, formatter, textBuilder)=>{
+    items.forEach(item=>{
+      const score = scoreText(textBuilder(item));
+      if (score > 0){
+        matches.push({ label, score, formatted: formatter(item) });
+      }
+    });
+  };
+
+  addMatches(
+    KB.projects,
+    "Projects",
+    projectToLine,
+    item => `${item.title} ${item.summary} ${(item.tags||[]).join(" ")}`
+  );
+  addMatches(
+    KB.experiences,
+    "Experience",
+    experienceToLine,
+    item => `${item.company} ${item.role} ${item.focus} ${(item.highlights||[]).join(" ")} ${(item.tags||[]).join(" ")}`
+  );
+  addMatches(
+    KB.achievements,
+    "Achievements",
+    item => `**${item.title}** — ${item.detail}`,
+    item => `${item.title} ${item.detail}`
+  );
+  addMatches(
+    KB.certifications,
+    "Certifications",
+    certificationLine,
+    item => `${item.name} ${item.date}`
+  );
+
+  Object.entries(KB.narratives).forEach(([key, lines])=>{
+    const label = key === "agentic" ? "Agentic perspective" : "Data perspective";
+    const score = scoreText(lines.join(" "));
+    if (score > 0){
+      matches.push({ label, score, formatted: bullets(lines) });
+    }
+  });
+
+  if (!matches.length) return null;
+
+  matches.sort((a,b)=> b.score - a.score);
+  const grouped = new Map();
+  matches.forEach(match=>{
+    if (!grouped.has(match.label)) grouped.set(match.label, []);
+    grouped.get(match.label).push(match);
+  });
+
+  const sections = [];
+  grouped.forEach((items, label)=>{
+    const limit = label.includes("perspective") ? 1 : 3;
+    const lines = items.slice(0, limit).map(m=>m.formatted).join('\n');
+    sections.push(`**${label}**`);
+    sections.push(lines);
+  });
+
+  sections.push(`- Explore more: [${KB.siteSections.projects}](${KB.siteSections.projects})`);
+  return sections.filter(Boolean).join('\n\n');
+}
+
+function fallbackAnswer(question){
+  const q = (question||"").toLowerCase();
+  if(!q){
+    return [
+      summarizeProfile(),
+      "",
+      "**Try asking about:** projects, connectors, agentic AI, or music."
+    ].join('\n');
+  }
+
+  if(q.includes("music") || q.includes("hobby") || q.includes("outside")){
+    return musicAnswer();
+  }
+
+  if(q.includes("achievement") || q.includes("win") || q.includes("highlight")){
+    return achievementsAnswer();
+  }
+
+  if(q.includes("ai arena") || q.includes("impact arena") || q.includes("ai-mmunity")){
+    return [
+      "**Google Cloud Agents for Impact Arena — AI-mmunity**",
+      bullets([
+        "Led the agentic layer on Google ADK, wiring in multi-agent orchestration and governance.",
+        "Coordinated data flows, context routing, and evaluation loops to make the community wellness framework production-ready.",
+        "Presented as a Top-5 finalist at Google Cloud Next ’26."
+      ]),
+      `- More: [${KB.siteSections.projects}](${KB.siteSections.projects})`
+    ].join('\n');
+  }
+
+  if(q.includes("snowflake")){
+    const projects = searchProjects("snowflake");
+    const experiences = searchExperience("snowflake");
+    return [
+      "**Snowflake & data connectors**",
+      bullets([
+        "Built ACL-aware connectors for Snowflake, ServiceNow, and Aha! powering enterprise AI search.",
+        "Designed NL2SQL agent on Gemini Enterprise with schema profiling + value dictionaries."
+      ]),
+      projects.map(projectToLine).join('\n'),
+      experiences.map(experienceToLine).join('\n'),
+      `- [Projects](${KB.siteSections.projects})`
+    ].filter(Boolean).join('\n\n');
+  }
+
+  if(q.includes("agent") || q.includes("agentic") || q.includes("adk")){
+    return agenticFocusAnswer();
+  }
+
+  if(q.includes("resume") || q.includes("experience") || q.includes("background")){
+    const topExp = KB.experiences.slice(0,3).map(experienceToLine).join('\n\n');
+    return [
+      summarizeProfile(),
+      "",
+      topExp,
+      `- Full resume: [${KB.siteSections.resume}](${KB.siteSections.resume})`
+    ].join('\n');
+  }
+
+  if(q.includes("cert") || q.includes("certification")){
+    return [
+      "**Certifications**",
+      bullets(KB.certifications.map(certificationLine)),
+      `- [Resume](${KB.siteSections.resume})`
+    ].join('\n');
+  }
+
+  if(q.includes("education") || q.includes("nyu") || q.includes("manipal")){
+    return [
+      "**Education**",
+      bullets(KB.education.map(ed=>`${ed.school} — ${ed.program} (${ed.timeline})${ed.gpa?` • GPA ${ed.gpa}`:""}`)),
+      `- [Academic timeline](${KB.siteSections.resume})`
+    ].join('\n');
+  }
+
+  if(q.includes("relocation") || q.includes("location")){
+    const faq = KB.faqs.find(f=>f.tags.includes("relocation"));
+    return [
+      "**Location & availability**",
+      bullets(faq?.answer || []),
+      `- Reach out: [Email](mailto:${KB.profile.email})`
+    ].join('\n');
+  }
+
+  if(q.includes("data") || q.includes("connector") || q.includes("governance")){
+    return dataFocusAnswer();
+  }
+
+  const keyword = keywordSearchAnswer(question);
+  if (keyword) return keyword;
+
+  const topProjects = searchProjects("").slice(0,3).map(projectToLine).join('\n');
+  return [
+    summarizeProfile(),
+    "",
+    "**Highlighted projects**",
+    topProjects,
+    `- Explore more: [${KB.siteSections.projects}](${KB.siteSections.projects})`
+  ].join('\n');
 }
 
 /* ========= 3) Command routing ========= */
@@ -205,174 +932,270 @@ async function handleCmd(raw){
   const [head, ...rest] = cmd.split(' ');
   const q = rest.join(' ').trim();
 
+  if (head === 'man') {
+    if (!q) {
+      printAssistant("Usage: man <command>\nExample: man projects");
+      return;
+    }
+    const manPages = {
+      projects: `**man projects**
+Usage: projects [--flag]
+Flags:
+  --work              Work/professional projects (connectors, agents, etc.)
+  --personal          Personal & academic projects
+  --ml, --ai          Machine learning & AI projects
+  --academic          Academic research projects
+  --networking        Network-related projects
+  --game, --creative  Creative & game projects
+  (or any keyword)    Filter by keyword in title/tags
+Example: projects --work`,
+      resume: `**man resume**
+Usage: resume
+Displays a snapshot of roles, education, and certifications with links to full resume.`,
+      achievements: `**man achievements**
+Usage: achievements
+Lists key wins, awards, and milestones with relevant links.`,
+      experience: `**man experience**
+Usage: experience [--flag]
+Flags:
+  --ml, --ai          Machine learning & AI roles
+  --game              Game development roles
+  --aws, --gcp        Cloud infrastructure roles
+  (or any keyword)    Filter by keyword in company/role/tags
+Example: experience --game`,
+      linkedin: `**man linkedin**
+Usage: linkedin
+Opens LinkedIn profile in a new tab.`,
+      open: `**man open**
+Usage: open <section>
+Sections: home | about | projects | blogs | resume | music | contact
+Example: open projects`,
+      music: `**man music**
+Usage: music
+Displays creative outlets and music links.`,
+      skills: `**man skills**
+Usage: skills
+Lists core technical stacks and focus areas.`,
+      certs: `**man certs**
+Usage: certs
+Shows recent certifications.`,
+      blogs: `**man blogs**
+Usage: blogs
+Displays portfolio blog links and Medium profile.`
+    };
+    const page = manPages[q.toLowerCase()];
+    if (page) {
+      lastAnswerMD = page;
+      printAssistant(page);
+    } else {
+      printAssistant(`No manual entry for '${q}'.\nTry: man projects, man resume, man open, etc.`);
+    }
+    return;
+  }
+
   if (head === 'help' || head === '?') {
-    printAssistant(`Available commands:
-- ask <question>        — Ask about Aashna’s work, skills, projects.
-- projects [filter]     — Quick list from resume; filter by word (e.g., projects snowflake).
-- resume                — Compact resume summary with a link.
-- open <section>        — about | projects | resume | talks | blog | contact
-- clear                 — Clear the terminal.`);
+    const helpText = `Available commands:
+- projects [--flag]     — Project highlights. Use --work, --personal, --ml, etc.
+- resume                — Snapshot of roles, education, certs.
+- achievements          — Key wins & milestones.
+- blogs                 — Portfolio blogs & Medium profile.
+- music                 — Covers & YouTube links.
+- linkedin              — Open LinkedIn profile.
+- experience [--flag]   — Filter roles (e.g., experience --game).
+- skills                — Core stacks & focus areas.
+- certs                 — Recent certifications.
+- open <section>        — home | about | projects | blogs | resume | music | contact
+- clear                 — Clear the terminal.
+- man <command>         — Show detailed usage for a command.
+Tip: Links in responses are clickable. Use "man projects" to see all flags.`;
+    lastAnswerMD = helpText;
+    printAssistant(helpText);
     return;
   }
   if (head === 'clear' || (head==='cls')) { clearTerm(); return; }
 
   if (head === 'open') {
-    if (!q) { printAssistant("Usage: open <about|projects|resume|talks|blog|contact>"); return; }
+    if (!q) { printAssistant("Usage: open <home|about|projects|blogs|resume|music|contact>"); return; }
     const key = q.toLowerCase();
-    const url = SECTION_LINKS[key] || `${state.siteUrl}`;
+    const url = SECTION_LINKS[key] || SITE_URL;
     window.open(url, '_blank');
     printAssistant(`Opening <${url}>`);
     return;
   }
 
   if (head === 'resume') {
-    printAssistant(`**Resume (compact)**
-- Associate AI Engineer @ Searce — Agentic AI (ADK), connectors (ServiceNow, Aha!, Snowflake), GCP, BigQuery, RAG
-- Top-5 finalist: Google Cloud Agents for Impact Arena (AI-mmunity)
-- MS, Computer Engineering — NYU Tandon (2025)
-- Skills: Python, TypeScript, SQL, Vertex AI, Kubernetes
-- [Portfolio](${state.siteUrl}) • [Resume](${SECTION_LINKS.resume || state.siteUrl})`);
+    const summary = [
+      summarizeProfile(),
+      "",
+      "**Recent experience**",
+      KB.experiences.slice(0,2).map(experienceToLine).join('\n\n'),
+      "",
+      "**Education**",
+      bullets(KB.education.map(ed=>`${ed.school} — ${ed.program} (${ed.timeline})`)),
+      `- Full resume: [${SECTION_LINKS.resume}](${SECTION_LINKS.resume})`,
+      `- Portfolio: [${SITE_URL}](${SITE_URL})`
+    ].join('\n');
+    lastAnswerMD = summary;
+    printAssistant(summary);
+    return;
+  }
+
+  if (head === 'achievements' || head === 'wins') {
+    const body = achievementsAnswer();
+    lastAnswerMD = body;
+    printAssistant(body);
+    return;
+  }
+
+  if (head === 'agentic') {
+    const body = agenticFocusAnswer();
+    lastAnswerMD = body;
+    printAssistant(body);
+    return;
+  }
+
+  if (head === 'data') {
+    const body = dataFocusAnswer();
+    lastAnswerMD = body;
+    printAssistant(body);
+    return;
+  }
+
+  if (head === 'music') {
+    const body = musicAnswer();
+    lastAnswerMD = body;
+    printAssistant(body);
+    return;
+  }
+
+  if (head === 'linkedin') {
+    window.open(KB.socials.linkedin, '_blank');
+    printAssistant(`Opening LinkedIn: [${KB.socials.linkedin}](${KB.socials.linkedin})`);
     return;
   }
 
   if (head === 'projects') {
-    const filter = q.toLowerCase();
-    const lines = [
-      `**AI-mmunity (Top-5)** — multi-agent framework; agentic layer on ADK. [Projects](${SECTION_LINKS.projects || state.siteUrl})`,
-      `**Enterprise Search & Connectors** — ServiceNow, Aha!, Snowflake with ACL governance. [Projects](${SECTION_LINKS.projects || state.siteUrl})`,
-      `**Snowflake NL2SQL Agent** — schema profiling + value dictionaries. [Projects](${SECTION_LINKS.projects || state.siteUrl})`,
-      `**Interior Design Assistant** — BigQuery embeddings + placement. [Projects](${SECTION_LINKS.projects || state.siteUrl})`,
-      `**USDM 4.0 Extractor** — LLM → USDM JSON with relations. [Projects](${SECTION_LINKS.projects || state.siteUrl})`
-    ].filter(x => !filter || x.toLowerCase().includes(filter));
-    printAssistant(lines.join('\n'));
-    return;
-  }
-
-  if (head === 'ask') {
-    if (!state.apiKey) {
-      printAssistant("No API key set. Click **Settings** (top-right) to add your OpenAI key.");
+    const filter = q.toLowerCase().replace(/^--/, '');
+    const projects = searchProjects(filter).slice(0,8);
+    if (!projects.length){
+      printAssistant("No projects matched that filter. Try --work, --personal, --ml, or another keyword.");
       return;
     }
-    if (!q) { printAssistant("Usage: ask <your question>"); return; }
-    try {
-      printSys("thinking…");
-      const answer = await askLLM(q);
-      lastAnswerMD = answer;
-      printAssistant(answer);
-    } catch (e) {
-      printAssistant(`**Error**: ${e.message || e}`);
-    }
+    const body = [
+      `**Projects${filter?` • ${filter}`:""}**`,
+      projects.map(projectToLine).join('\n'),
+      `- More: [${SECTION_LINKS.projects}](${SECTION_LINKS.projects})`
+    ].join('\n');
+    lastAnswerMD = body;
+    printAssistant(body);
     return;
   }
 
-  // Fallback: treat as ask
-  const implicit = cmd;
-  if (state.apiKey) {
-    printSys("interpreting as question…");
-    try {
-      const answer = await askLLM(implicit);
-      lastAnswerMD = answer;
-      printAssistant(answer);
-    } catch(e) {
-      printAssistant(`**Error**: ${e.message || e}`);
+  if (head === 'experience') {
+    const filter = q.toLowerCase().replace(/^--/, '');
+    const roles = searchExperience(filter).slice(0,4);
+    if (!roles.length){
+      printAssistant("No roles matched that filter. Try --game, --ml, --aws, or any keyword.");
+      return;
     }
-  } else {
-    printAssistant("Unknown command. Type `help`.");
+    const body = [
+      `**Experience${filter?` • ${filter}`:""}**`,
+      roles.map(experienceToLine).join('\n\n'),
+      `- Full resume: [${SECTION_LINKS.resume}](${SECTION_LINKS.resume})`
+    ].join('\n');
+    lastAnswerMD = body;
+    printAssistant(body);
+    return;
   }
+
+  if (head === 'blogs') {
+    const body = [
+      "**Blogs & writing**",
+      `- Portfolio blogs: [${SECTION_LINKS.blogs}](${SECTION_LINKS.blogs})`,
+      `- Medium: [${KB.socials.medium}](${KB.socials.medium})`
+    ].join('\n');
+    lastAnswerMD = body;
+    printAssistant(body);
+    return;
+  }
+
+  if (head === 'skills') {
+    const sk = KB.skills;
+    const body = [
+      "**Skills & stacks**",
+      `- Languages: ${sk.languages.join(', ')}`,
+      `- ML & Agents: ${sk.ml.join(', ')}`,
+      `- Cloud & Data: ${sk.cloud.join(', ')}`,
+      `- Focus areas: ${sk.domains.join(', ')}`,
+      `- [Portfolio](${SECTION_LINKS.home})`
+    ].join('\n');
+    lastAnswerMD = body;
+    printAssistant(body);
+    return;
+  }
+
+  if (head === 'certs' || head === 'certifications') {
+    const body = [
+      "**Certifications**",
+      bullets(KB.certifications.map(certificationLine)),
+      `- Details: [${SECTION_LINKS.resume}](${SECTION_LINKS.resume})`
+    ].join('\n');
+    lastAnswerMD = body;
+    printAssistant(body);
+    return;
+  }
+  // Fallback: keyword-based answer
+  const answer = fallbackAnswer(cmd);
+  lastAnswerMD = answer;
+  printAssistant(answer);
 }
 
-/* ========= 4) OpenAI call (Chat Completions) ========= */
-async function askLLM(question){
-  const sys = `
-You are "Aashna Terminal", a concise recruiter-facing assistant.
-Answer ONLY using the provided RESUME and LINKS. If unsure, say so and suggest opening the portfolio page.
-Rules:
-- Use bullet points.
-- Be precise about role, impact, tech.
-- Add 1–3 short, descriptive links to the portfolio when useful.
-- Return plain markdown (no HTML).
-Portfolio base: ${state.siteUrl}
-Known sections: ${Object.entries(SECTION_LINKS).map(([k,v])=>`${k}: ${v}`).join(', ')}
-RESUME:
-${RESUME_MD}
-  `.trim();
-
-  const body = {
-    model: state.model || "gpt-4o-mini",
-    messages: [
-      { role: "system", content: sys },
-      { role: "user", content: question }
-    ],
-    temperature: 0.2,
-    max_tokens: 500
-  };
-
-  // If you run a local proxy, swap the URL below to '/api/chat'
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${state.apiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(body)
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`OpenAI error ${res.status}: ${text}`);
-  }
-  const data = await res.json();
-  const md = data.choices?.[0]?.message?.content?.trim();
-  if (!md) throw new Error("No content returned.");
-  return md;
-}
-
-/* ========= 5) Wire up UI ========= */
+/* ========= 4) Wire up UI ========= */
 input.addEventListener('keydown', (e)=>{
   if (e.key === 'Enter') {
     const v = input.value;
-    input.value = '';
-    handleCmd(v);
+    handleCmd(v).finally(()=>{ input.value=''; });
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
     if (histIdx > 0) { histIdx--; input.value = history[histIdx] || ''; setTimeout(()=>input.setSelectionRange(input.value.length, input.value.length)); }
   } else if (e.key === 'ArrowDown') {
     e.preventDefault();
     if (histIdx < history.length-1) { histIdx++; input.value = history[histIdx] || ''; } else { histIdx = history.length; input.value=''; }
-  } else if (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey)) {
+  } else if (e.key.toLowerCase() === 'k' && e.ctrlKey && e.shiftKey) {
     e.preventDefault(); clearTerm();
   } else if (e.key === 'Escape') {
     input.focus();
   }
 });
-clearBtn.addEventListener('click', clearTerm);
+clearBtn.addEventListener('click', ()=>{
+  clearTerm();
+  input.focus();
+});
 copyBtn.addEventListener('click', ()=>{
-  if (!lastAnswerMD) { printSys("nothing to copy yet."); return; }
-  navigator.clipboard.writeText(lastAnswerMD).then(()=>printSys("copied."), ()=>printSys("copy failed."));
+  if (!lastAnswerMD) { printSys("nothing to copy yet."); input.focus(); return; }
+  navigator.clipboard.writeText(lastAnswerMD)
+    .then(()=>printSys("copied."), ()=>printSys("copy failed."))
+    .finally(()=>input.focus());
 });
-settingsBtn.addEventListener('click', ()=> {
-  apiKeyEl.value = state.apiKey;
-  modelEl.value = state.model;
-  siteEl.value = state.siteUrl;
-  dlg.showModal();
-});
-saveSettingsBtn.addEventListener('click', (e)=>{
-  e.preventDefault();
-  state.apiKey = apiKeyEl.value.trim();
-  state.model = modelEl.value.trim() || "gpt-4o-mini";
-  state.siteUrl = siteEl.value.trim() || "https://www.aashnakunk.com";
-  // Persist key & prefs (optional)
-  localStorage.setItem('openai_key', state.apiKey);
-  localStorage.setItem('model', state.model);
-  localStorage.setItem('site_url', state.siteUrl);
-  dlg.close();
-  printSys("settings saved.");
-});
-
 window.addEventListener('load', ()=>{
   input.focus();
+  if (sessionLog.length){
+    sessionLog.forEach(entry=>{
+      const div=document.createElement('div');
+      div.className=`line ${entry.cls}`.trim();
+      div.innerHTML=entry.html;
+      term.appendChild(div);
+    });
+    term.scrollTop=term.scrollHeight;
+  } else {
   showWelcome();
+  }
 });
 </script>
 </body>
 </html>
+
+
+
+
+
