@@ -173,7 +173,7 @@
       pointer-events:none;
     }
     .line:hover::after { opacity:1; }
-    .sys { color:var(--muted) }
+    .sys { color:var(--muted); opacity:0.65; font-style:italic; font-size:15px; }
     .prompt-tag { color:var(--accent); margin-right:10px; display:inline-block; }
     .assistant { color:var(--text); text-shadow:0 0 6px rgba(243,209,150,0.08); }
     .assistant.streaming::after { display:none; }
@@ -287,12 +287,12 @@
   
   <div class="prompt">
       <span class="prompt-prefix">guest@aashnasportfolio:~$</span>
-      <input id="input" autocomplete="off" spellcheck="false" placeholder="Type a command or type `help` to know more…"/>
+      <input id="input" autocomplete="off" spellcheck="false" placeholder="Type a command or type `help`"/>
     <div class="caret"></div>
     </div>
   </div>
 
-  <div class="footer small">↑/↓ history • <span class="kbd">Esc</span> focus • <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">K</span> clear • answers cite your resume / site</div>
+  <div class="footer small">↑/↓ history • <span class="kbd">Tab</span> autocomplete • <span class="kbd">Ctrl+R</span> search • <span class="kbd">Ctrl+L</span> clear • <span class="kbd">|</span> pipe/grep</div>
 </div>
 
 <script>
@@ -303,7 +303,6 @@ const KB = {
     title: "AI Engineer building agentic workflows",
     location: "Dublin / SF Bay Area, California",
     email: "aashnakunk@gmail.com",
-    phone: "+1 (347) 382 4780",
     summary: [
       "AI engineer focused on Google ADK/Gemini agentic systems with governance-first enterprise delivery.",
       "Background spans cloud ML pipelines, multi-agent orchestration, connectors, and GPU acceleration.",
@@ -315,7 +314,7 @@ const KB = {
     github: "https://github.com/aashnakunk",
     linkedin: "https://www.linkedin.com/in/aashnakunk/",
     medium: "https://medium.com/@aashnakunk",
-    instagram: "https://www.instagram.com/aashnakunk",
+    instagram: "https://www.instagram.com/aashnakunkolienkar",
     youtube: "https://www.youtube.com/@aashnakunk"
   },
   siteSections: {
@@ -384,6 +383,18 @@ const KB = {
       tags: ["virtualization", "networking"]
     },
     {
+      company: "Invenger Technologies",
+      role: "ML Engineer Intern",
+      timeline: "May 2022 – Jul 2022",
+      location: "India",
+      focus: "Medical AI, ECG analysis",
+      highlights: [
+        "Developed ML method using residual neural networks to analyze Electrocardiogram signals and identify patient abnormalities.",
+        "Successfully implemented system capable of identifying six different cardiac abnormalities from ECG data."
+      ],
+      tags: ["ml", "healthcare", "deep-learning", "ai"]
+    },
+    {
       company: "Siemens",
       role: "Computer Vision Intern",
       timeline: "Jul 2021 – Aug 2021",
@@ -398,15 +409,21 @@ const KB = {
   education: [
     {
       school: "New York University, Tandon School of Engineering",
+      location: "New York, USA",
       program: "M.S. in Computer Engineering",
-      timeline: "Sep 2023 – May 2025",
+      timeline: "September 2023 – May 2025",
       gpa: "3.945/4.0",
-      roles: ["Teaching Assistant: Database Systems", "Teaching Assistant: Introduction to Computer Science"]
+      roles: [
+        "Teaching Assistant for 'CS3083-Database Systems' (September 2024 – December 2024)",
+        "Teaching Assistant for 'CS1122-Introduction to Computer Science' (January 2024 – Current)"
+      ]
     },
     {
       school: "Manipal Institute of Technology",
-      program: "B.Tech. in Computer Science (Minor: Machine Learning)",
-      timeline: "Jul 2019 – May 2023",
+      location: "Karnataka, India",
+      program: "B.Tech. in Computer Science and Engineering",
+      minor: "Machine Learning",
+      timeline: "July 2019 – May 2023",
       gpa: "9.01/10.0"
     }
   ],
@@ -420,9 +437,9 @@ const KB = {
   projects: [
     {
       title: "AI-mmunity",
-      subtitle: "Top-5 finalist • Google Cloud Agents for Impact Arena",
-      summary: "End-to-end community health and wellness monitoring platform for health officials and residents. Uses AI-driven insights + multi-agent architecture for real-time public health monitoring, crowdsourced incident reporting (pollution, disease symptoms, food insecurity), and intelligent alerts/dashboards for faster intervention.",
-      tags: ["agentic-ai", "ai", "health", "google-cloud", "personal"]
+      subtitle: "WINNER • Google Cloud AI Arena Hackathon",
+      summary: "End-to-end community health and wellness monitoring platform for health officials and residents. Uses AI-driven insights + multi-agent (Google ADK) architecture for real-time public health monitoring, crowdsourced incident reporting (pollution, disease symptoms, food insecurity), and intelligent alerts/dashboards for faster intervention.",
+      tags: ["agentic-ai", "ai", "health", "google-cloud", "personal", "adk"]
     },
     {
       title: "Enterprise Search & Connectors",
@@ -436,12 +453,12 @@ const KB = {
     },
     {
       title: "Interior Design Assistant",
-      summary: "Agentic furniture recommender with image placement guidance and BigQuery embeddings.",
+      summary: "Agentic furniture recommender with image placement guidance and BigQuery embeddings scraped from the furniture catalog.",
       tags: ["vision", "recommendation", "adk", "ai", "ml", "work"]
     },
     {
       title: "USDM 4.0 Trial Extractor",
-      summary: "LLM pipeline mapping clinical protocols into FDA-compliant USDM JSON with nested relations.",
+      summary: "LLM pipeline to perform smart extraction of clinical protocol documents into FDA-compliant USDM JSON with nested relations.",
       tags: ["healthcare", "llm", "etl", "ai", "work"]
     },
     {
@@ -498,6 +515,54 @@ const KB = {
       title: "Neural Network from Scratch",
       summary: "Feedforward neural network implemented from first principles with manual forward/backward propagation in NumPy, verified with PyTorch.",
       tags: ["ml", "academic", "ai", "deep-learning", "personal"]
+    },
+    {
+      title: "ATIS 2022 Conference Website",
+      summary: "Developed official website for international conference on Applications and Techniques of Information Security in collaboration with senior professors from Deakin University, Australia. Built with CSS, JavaScript, HTML, and React.",
+      tags: ["web-dev", "react", "conference", "personal"]
+    },
+    {
+      title: "UberTower Portal for Nutanix",
+      summary: "Backend developer in team of 5 building internal portal for Nutanix India to track SRE cases (open/resolved), employee status, leaves, birthdays, and other employee details. Tech stack: Git, Python, PHP, JSON, Java.",
+      tags: ["backend", "python", "php", "work", "personal"]
+    },
+    {
+      title: "Skin Lesion Classification using ML",
+      summary: "Trained convolutional neural network using Keras on publicly available dermatoscopic image dataset. Focused on dataset sampling techniques to handle class imbalance and avoid model bias in medical diagnosis.",
+      tags: ["ml", "healthcare", "keras", "cnn", "academic", "personal"]
+    },
+    {
+      title: "Fingerprint Pre-processing for Forensics",
+      summary: "Enhanced quality of dirty and partial fingerprint samples from forensic department of Kasturba Medical College, Manipal using OpenCV library, filtering techniques, and image processing.",
+      tags: ["computer-vision", "opencv", "forensics", "academic", "personal"]
+    }
+  ],
+  activities: [
+    {
+      category: "Music",
+      items: [
+        "Co-released three singles on Spotify with band 'The Brown House'",
+        "Member of Chords & Co music club at Manipal Institute of Technology",
+        "Conducted 4-day Rock Drumming workshop for juniors (January 2020)",
+        "Grade 8 in Performing Text, Speech and Drama from Trinity College London"
+      ]
+    },
+    {
+      category: "Leadership & Sports",
+      items: [
+        "Captain of School's Table Tennis team (10th grade)",
+        "Member of AIESEC (non-profit for leadership development)",
+        "Taught underprivileged children about sustainable development (September 2019)",
+        "Solely responsible for organizational formalities of ATIS conference with Deakin University (June 2022 - Present)"
+      ]
+    },
+    {
+      category: "Clubs & Societies",
+      items: [
+        "Member of official music club at Manipal Institute of Technology",
+        "Member of coding club",
+        "Active participant in AIESEC Manipal branch"
+      ]
     }
   ],
   achievements: [
@@ -508,40 +573,25 @@ const KB = {
     },
     {
       title: "Manohar Parrikar Goa Scholars Award 2023",
-      detail: "Recognized for academic excellence and contributions to technology.",
+      detail: "Recognized for academic excellence and contributions to technology with a $25,000 scholarship",
       link: null
     },
     {
-      title: "Enterprise connectors",
-      detail: "Led architecture for ServiceNow, Aha!, Snowflake connectors with ACL-aware governance for enterprise search agents.",
-      link: { label: "Enterprise search", url: "https://www.aashnakunk.com/s-projects-basic" }
-    },
-    {
-      title: "CUDA medical imaging research",
-      detail: "Parallel LNDP feature extractor hitting 63,000× speedup on the LISS dataset.",
-      link: { label: "Research", url: "https://www.aashnakunk.com/s-projects-basic" }
-    },
-    {
       title: "Agent observability feedback",
-      detail: "Partnered with Google's ADK team on tracing, telemetry, and reliability features; authored internal observability guides.",
-      link: { label: "Agent insights", url: "https://www.aashnakunk.com/s-projects-basic" }
-    },
-    {
-      title: "Identity federation troubleshooting",
-      detail: "Resolved Workforce Identity Federation (Entra ID) integration for AgentSpace; published debugging playbooks.",
-      link: { label: "Cloud notes", url: "https://www.aashnakunk.com/projects" }
+      detail: "Partnered with Google's ADK team on a research survery for tracing, telemetry, and reliability features; authored internal observability guides.",
     }
   ],
   creative: {
     music: {
       summary: [
-        "Singer and musician sharing covers that blend Indian classical, pop, and indie influences.",
-        "Music is the creative reset after long AI build cycles."
+        "Multi-instrumentalist playing saxophone, piano, drums, flute, and occasionally guitar.",
+        "Favorite genres: jazz, soul, and classic rock.",
+        "Explore my covers on YouTube and Instagram reels."
       ],
       links: [
-        { label: "Music hub", url: "https://www.aashnakunk.com/music" },
-        { label: "YouTube", url: "https://www.youtube.com/@aashnakunk" },
-        { label: "Instagram", url: "https://www.instagram.com/aashnakunk" }
+        { label: "YouTube Channel", url: "https://www.youtube.com/@aashnakunk" },
+        { label: "Instagram Reels", url: "https://www.instagram.com/aashnakunk" },
+        { label: "Music Page", url: "https://www.aashnakunk.com/music" }
       ]
     }
   },
@@ -564,7 +614,7 @@ const KB = {
     {
       question: "What are Aashna’s strongest focus areas?",
       answer: [
-        "Agentic AI on Google ADK/Gemini and LangGraph-based orchestration.",
+        "Agentic AI on Google ADK/Gemi and LangGraph-based orchestration.",
         "Enterprise connectors and data governance for ServiceNow, Aha!, Snowflake.",
         "Cloud-native ML pipelines across GCP (Vertex AI, BigQuery) and AWS (SageMaker/Bedrock)."
       ],
@@ -609,9 +659,13 @@ function escapeHTML(str){
 
 function printSys(text){ addLine(escapeHTML(text), 'sys'); }
 function printUser(text){
-  addLine(`<span class="prompt-tag">guest@aashnasportfolio:~$</span>${escapeHTML(text)}`, 'user');
+  addLine(`<span class="prompt-tag">guest@aashnasportfolio:${currentPath}$</span>${escapeHTML(text)}`, 'user');
 }
 function printAssistant(md, opts={}){ addLine(renderMarkdown(md), 'assistant', opts); }
+function updatePromptPrefix(){
+  const prefix = document.querySelector('.prompt-prefix');
+  if(prefix) prefix.textContent = `guest@aashnasportfolio:${currentPath}$`;
+}
 function persistLog(){ localStorage.setItem('term_log', JSON.stringify(sessionLog)); }
 
 function addLine(text, cls='', opts={}){
@@ -650,8 +704,8 @@ function clearTerm(){
   input.focus();
 }
 function showWelcome(){
-  printSys("Portfolio Terminal • Q&A\n");
-  printSys("Type `help` to see available commands.\n");
+  printSys("Welcome to my Portfolio Terminal");
+  printSys("Type `help` to see available commands.");
 }
 function renderMarkdown(md){
   let html = md
@@ -921,16 +975,412 @@ function fallbackAnswer(question){
   ].join('\n');
 }
 
-/* ========= 3) Command routing ========= */
+/* ========= 3) Virtual Filesystem & Command routing ========= */
+// Virtual filesystem state
+let currentPath = '~';
+const pathStack = [];
+
+// Filesystem structure
+const FS = {
+  '~': {
+    type: 'dir',
+    contents: ['resume', 'projects', 'experience', 'education', 'skills', 'certs', 'music', 'blogs', 'achievements']
+  },
+  '~/resume': { type: 'file', data: 'resume' },
+  '~/projects': {
+    type: 'dir',
+    contents: KB.projects.map(p => p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'))
+  },
+  '~/experience': {
+    type: 'dir',
+    contents: KB.experiences.map(e => e.company.toLowerCase().replace(/[^a-z0-9]+/g, '-'))
+  },
+  '~/education': {
+    type: 'dir',
+    contents: ['nyu-masters', 'manipalit-btech']
+  },
+  '~/education/nyu-masters': { type: 'file', data: 'education', education: KB.education[0] },
+  '~/education/manipalit-btech': { type: 'file', data: 'education', education: KB.education[1] },
+  '~/skills': { type: 'file', data: 'skills' },
+  '~/certs': { type: 'file', data: 'certs' },
+  '~/music': { type: 'file', data: 'music' },
+  '~/blogs': { type: 'file', data: 'blogs' },
+  '~/achievements': { type: 'file', data: 'achievements' }
+};
+
+// Add project files
+KB.projects.forEach(p => {
+  const slug = p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  FS[`~/projects/${slug}`] = { type: 'file', data: 'project', project: p };
+});
+
+// Add experience files
+KB.experiences.forEach(e => {
+  const slug = e.company.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  FS[`~/experience/${slug}`] = { type: 'file', data: 'experience', experience: e };
+});
+
+// Command aliases (for backwards compatibility)
+const ALIASES = {
+  'whoami': 'resume',
+  'about': 'resume',
+  'work': 'experience',
+  'jobs': 'experience',
+  'wins': 'achievements',
+  'awards': 'achievements',
+  'write': 'blogs',
+  'songs': 'music',
+  'covers': 'music'
+};
+
+// Global pipe filter
+let globalPipeFilter = null;
+
+// Helper to apply pipe filter to output
+function applyPipeFilter(text) {
+  if (!globalPipeFilter || !text) return text;
+  const lines = text.split('\n').filter(line => 
+    line.toLowerCase().includes(globalPipeFilter)
+  );
+  return lines.length ? lines.join('\n') : `No results matching "${globalPipeFilter}"`;
+}
+
+// Override printAssistant to apply filter
+const originalPrintAssistant = printAssistant;
+function printAssistantFiltered(text) {
+  originalPrintAssistant(applyPipeFilter(text));
+}
+ 
 async function handleCmd(raw){
-  const cmd = raw.trim();
+    let cmd = raw.trim();
   if(!cmd) return;
 
-  history.push(cmd); localStorage.setItem('hist', JSON.stringify(history)); histIdx = history.length;
-  printUser(cmd);
+  // Handle pipes (projects | grep keyword)
+  globalPipeFilter = null;
+  if (cmd.includes('|')) {
+    const parts = cmd.split('|').map(p => p.trim());
+    cmd = parts[0];
+    const pipeCmd = parts[1];
+    if (pipeCmd.startsWith('grep ')) {
+      globalPipeFilter = pipeCmd.substring(5).trim().toLowerCase();
+    }
+  }
 
-  const [head, ...rest] = cmd.split(' ');
+  
+  history.push(raw); localStorage.setItem('hist', JSON.stringify(history)); histIdx = history.length;
+  printUser(raw);
+
+  let [head, ...rest] = cmd.split(' ');
+  
+  // Apply aliases
+  if (ALIASES[head.toLowerCase()]) {
+    head = ALIASES[head.toLowerCase()];
+  }
+  
   const q = rest.join(' ').trim();
+  
+  // Use filtered print function for this command
+  const printAssistant = printAssistantFiltered;
+
+  // Filesystem commands
+  if (head === 'pwd') {
+    printAssistant(`${currentPath}`);
+    return;
+  }
+
+  if (head === 'ls') {
+    const target = q || currentPath;
+    const node = FS[target] || FS[currentPath];
+    
+    if (!node) {
+      printAssistant(`ls: cannot access '${target}': No such file or directory`);
+      return;
+    }
+    
+    if (node.type === 'file') {
+      printAssistant(target.split('/').pop());
+      return;
+    }
+    
+    if (node.type === 'dir') {
+      const items = node.contents.map(item => {
+        const fullPath = `${target === '~' ? '~' : target}/${item}`;
+        const itemNode = FS[fullPath];
+        return itemNode && itemNode.type === 'dir' ? `**${item}/**` : item;
+      });
+      printAssistant(items.join('\n'));
+      
+      // Show helpful tips based on current directory
+      let tip = '';
+      if (currentPath === '~' && !q) {
+        tip = 'Tip: Directories end with /. Use `cd <directory>` to navigate, or `cat <file>` to view files';
+      } else if (currentPath === '~/projects' || target === '~/projects') {
+        tip = 'Tip: Use `cat <project-name>` to view project details, or try `projects --ml` for filtered view';
+      } else if (currentPath === '~/experience' || target === '~/experience') {
+        tip = 'Tip: Use `cat <company-name>` to view role details, or try `experience --ai` for filtered view';
+      } else if (currentPath === '~/education' || target === '~/education') {
+        tip = 'Tip: Use `cat <degree-name>` to view full academic details including GPA and roles';
+      }
+      
+      if (tip) {
+        printSys(tip);
+      }
+      return;
+    }
+  }
+
+  if (head === 'cd') {
+    if (!q || q === '~') {
+      currentPath = '~';
+      updatePromptPrefix();
+      printAssistant('');
+      return;
+    }
+    
+    if (q === '..' || q === '../') {
+      const parts = currentPath.split('/');
+      if (parts.length > 1) {
+        parts.pop();
+        currentPath = parts.join('/') || '~';
+      }
+      updatePromptPrefix();
+      printAssistant('');
+      return;
+    }
+    
+    // Absolute path
+    if (q.startsWith('~/')) {
+      if (FS[q]) {
+        if (FS[q].type === 'dir') {
+          currentPath = q;
+          updatePromptPrefix();
+          
+          // Show helpful hint for directories
+          let hint = '';
+          if (q === '~/projects') {
+            hint = 'Tip: Use `ls` to see all projects, then `cat <project-name>` to view details';
+          } else if (q === '~/experience') {
+            hint = 'Tip: Use `ls` to see all roles, then `cat <company-name>` to view details';
+          } else if (q === '~/education') {
+            hint = 'Tip: Use `ls` to see degrees, then `cat <degree-name>` to view details';
+          }
+          
+          if (hint) {
+            printSys(hint);
+          } else {
+            printAssistant('');
+          }
+        } else {
+          printAssistant(`cd: not a directory: ${q}`);
+        }
+      } else {
+        printAssistant(`cd: no such file or directory: ${q}`);
+      }
+      return;
+    }
+    
+    // Relative path
+    const targetPath = currentPath === '~' ? `~/${q}` : `${currentPath}/${q}`;
+    if (FS[targetPath]) {
+      if (FS[targetPath].type === 'dir') {
+        currentPath = targetPath;
+        updatePromptPrefix();
+        
+        // Show helpful hint for directories
+        let hint = '';
+        if (targetPath === '~/projects') {
+          hint = 'Tip: Use `ls` to see all projects, then `cat <project-name>` to view details';
+        } else if (targetPath === '~/experience') {
+          hint = 'Tip: Use `ls` to see all roles, then `cat <company-name>` to view details';
+        } else if (targetPath === '~/education') {
+          hint = 'Tip: Use `ls` to see degrees, then `cat <degree-name>` to view details';
+        }
+        
+        if (hint) {
+          printSys(hint);
+        } else {
+          printAssistant('');
+        }
+      } else {
+        printAssistant(`cd: not a directory: ${q}`);
+      }
+    } else {
+      printAssistant(`cd: no such file or directory: ${q}`);
+    }
+    return;
+  }
+
+  if (head === 'cat') {
+    if (!q) {
+      printAssistant('cat: missing file operand');
+      return;
+    }
+    
+    // Resolve path
+    let targetPath = q;
+    if (!q.startsWith('~/')) {
+      targetPath = currentPath === '~' ? `~/${q}` : `${currentPath}/${q}`;
+    }
+    
+    const node = FS[targetPath];
+    if (!node) {
+      printAssistant(`cat: ${q}: No such file or directory`);
+      return;
+    }
+    
+    if (node.type === 'dir') {
+      printAssistant(`cat: ${q}: Is a directory`);
+      return;
+    }
+    
+    // Handle different file types
+    if (node.data === 'project') {
+      const p = node.project;
+      const body = [
+        `**${p.title}**`,
+        p.subtitle ? `*${p.subtitle}*` : '',
+        '',
+        p.summary,
+        '',
+        p.tags ? `**Tags:** ${p.tags.join(', ')}` : '',
+        '',
+        `**More:** [View all projects](${KB.siteSections.projects})`
+      ].filter(Boolean).join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      printSys('Tip: Use `cd ..` to go back, or `ls` to see other projects. Try `projects | grep <keyword>` to filter!');
+      return;
+    }
+    
+    if (node.data === 'experience') {
+      const e = node.experience;
+      const body = [
+        `**${e.role} — ${e.company}**`,
+        `${e.timeline} | ${e.location}`,
+        '',
+        `**Focus:** ${e.focus}`,
+        '',
+        '**Highlights:**',
+        bullets(e.highlights),
+        '',
+        e.tags ? `**Tags:** ${e.tags.join(', ')}` : '',
+        '',
+        `**More:** [View full resume](${KB.siteSections.resume})`
+      ].filter(Boolean).join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      printSys('Tip: Use `cd ..` to go back, or try `experience --ml` to see ML-focused roles');
+      return;
+    }
+    
+    if (node.data === 'education') {
+      const edu = node.education;
+      const body = [
+        `**${edu.school}**`,
+        edu.location,
+        '',
+        `**${edu.program}**`,
+        edu.minor ? `Minor: ${edu.minor}` : '',
+        `${edu.timeline}`,
+        `**GPA:** ${edu.gpa}`,
+        '',
+        edu.roles ? '**Roles:**' : '',
+        edu.roles ? bullets(edu.roles) : ''
+      ].filter(Boolean).join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      printSys('Tip: Use `cd ..` to go back, or `education` to see all degrees at once');
+      return;
+    }
+    
+    // For other files, route to original commands
+    if (node.data === 'resume') {
+      // Call original resume logic
+      const body = [
+        `**${KB.profile.name}** — ${KB.profile.title}`,
+        bullets(KB.profile.summary.map(s => s)),
+        `- Based in ${KB.profile.location}`,
+        `- [Portfolio](${KB.socials.portfolio}) • [GitHub](${KB.socials.github})`,
+        '',
+        '**Recent experience**',
+        ...KB.experiences.slice(0,2).map(experienceToLine),
+        '',
+        '**Education**',
+        bullets(KB.education.map(ed => `${ed.school} — ${ed.program} (${ed.timeline})`)),
+        '',
+        '*Disclaimer: This is just a snapshot. Please visit the link below for full details.*',
+        '',
+        `- Full resume: [${KB.siteSections.resume}](${KB.siteSections.resume})`,
+        `- Portfolio: [${KB.socials.portfolio}](${KB.socials.portfolio})`
+      ].join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      printSys('Tip: Try `experience` for full work history, `education` for degrees, or `skills` for tech stack');
+      return;
+    }
+    
+    if (node.data === 'skills') {
+      const sk = KB.skills;
+      const body = [
+        "**Skills & stacks**",
+        `- Languages: ${sk.languages.join(', ')}`,
+        `- ML & Agents: ${sk.ml.join(', ')}`,
+        `- Cloud & Data: ${sk.cloud.join(', ')}`,
+        `- Focus areas: ${sk.domains.join(', ')}`,
+        `- [Portfolio](${SECTION_LINKS.home})`
+      ].join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      return;
+    }
+    
+    if (node.data === 'certs') {
+      const body = [
+        "**Certifications**",
+        bullets(KB.certifications.map(certificationLine)),
+        `- Details: [${SECTION_LINKS.resume}](${SECTION_LINKS.resume})`
+      ].join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      return;
+    }
+    
+    if (node.data === 'music') {
+      const music = KB.creative.music;
+      const body = [
+        "**Music & creative side**",
+        bullets(music.summary),
+        music.links.map(link => `- [${link.label}](${link.url})`).join('\n')
+      ].join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      return;
+    }
+    
+    if (node.data === 'blogs') {
+      const body = [
+        "**Blogs & writing**",
+        `- Portfolio blogs: [${KB.siteSections.blogs}](${KB.siteSections.blogs})`,
+        `- Medium: [${KB.socials.medium}](${KB.socials.medium})`,
+        '',
+        'Topics: RAG pipelines, agentic AI, enterprise search, LLM observability, cloud ML'
+      ].join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      return;
+    }
+    
+    if (node.data === 'achievements') {
+      const body = [
+        "**Achievements & milestones**",
+        bullets(KB.achievements.map(a => `**${a.title}**${a.year ? ` (${a.year})` : ''}: ${a.detail}${a.link ? ` — [${a.link.label}](${a.link.url})` : ''}`))
+      ].join('\n');
+      lastAnswerMD = body;
+      printAssistant(body);
+      return;
+    }
+    
+  }
 
   if (head === 'man') {
     if (!q) {
@@ -948,13 +1398,17 @@ Flags:
   --networking        Network-related projects
   --game, --creative  Creative & game projects
   (or any keyword)    Filter by keyword in title/tags
-Example: projects --work`,
+Examples: 
+  projects --work
+  projects | grep snowflake    (filter output for "snowflake")`,
       resume: `**man resume**
 Usage: resume
-Displays a snapshot of roles, education, and certifications with links to full resume.`,
+Displays a snapshot of roles, education, and certifications with links to full resume.
+Example: resume | grep google    (filter for Google mentions)`,
       achievements: `**man achievements**
 Usage: achievements
-Lists key wins, awards, and milestones with relevant links.`,
+Lists key wins, awards, and milestones with relevant links.
+Example: achievements | grep arena    (filter for arena mentions)`,
       experience: `**man experience**
 Usage: experience [--flag]
 Flags:
@@ -962,7 +1416,9 @@ Flags:
   --game              Game development roles
   --aws, --gcp        Cloud infrastructure roles
   (or any keyword)    Filter by keyword in company/role/tags
-Example: experience --game`,
+Examples:
+  experience --game
+  experience | grep agent    (filter for "agent" mentions)`,
       linkedin: `**man linkedin**
 Usage: linkedin
 Opens LinkedIn profile in a new tab.`,
@@ -972,16 +1428,66 @@ Sections: home | about | projects | blogs | resume | music | contact
 Example: open projects`,
       music: `**man music**
 Usage: music
-Displays creative outlets and music links.`,
+Displays creative outlets and music links.
+Example: music | grep cover    (filter for covers)`,
       skills: `**man skills**
 Usage: skills
-Lists core technical stacks and focus areas.`,
+Lists core technical stacks and focus areas.
+Example: skills | grep python    (filter for Python mentions)`,
       certs: `**man certs**
 Usage: certs
-Shows recent certifications.`,
+Shows recent certifications.
+Example: certs | grep aws    (filter for AWS certs)`,
       blogs: `**man blogs**
 Usage: blogs
-Displays portfolio blog links and Medium profile.`
+Displays portfolio blog links and Medium profile.
+Example: blogs | grep rag    (filter for RAG-related blogs)`,
+      clear: `**man clear**
+Usage: clear
+Clears the terminal output. Shortcut: Ctrl+L`,
+      help: `**man help**
+Usage: help
+Shows all available commands, shortcuts, and aliases.
+Tip: All commands support piping with grep (e.g., resume | grep aws)`,
+      ls: `**man ls**
+Usage: ls [path]
+Lists contents of current directory or specified path.
+Directories are shown in **bold/** format.
+Examples:
+  ls              (list current directory)
+  ls projects     (list projects directory)
+  ls ~/experience (list experience directory)`,
+      cd: `**man cd**
+Usage: cd <directory>
+Changes the current working directory.
+Special paths:
+  cd ~            Go to home directory
+  cd ..           Go up one directory
+  cd projects     Go to projects directory
+Examples:
+  cd projects
+  cd ~/experience
+  cd ..`,
+      pwd: `**man pwd**
+Usage: pwd
+Prints the current working directory path.`,
+      cat: `**man cat**
+Usage: cat <file>
+Displays the contents of a file.
+Examples:
+  cat resume
+  cat searce                    (from ~/experience directory)
+  cat ai-mmunity                (from ~/projects directory)
+  cat resume | grep google      (with grep filter)`,
+      education: `**man education**
+Usage: education
+Displays academic background, degrees, GPA, and teaching roles.
+Navigate: cd education → ls → cat nyu-masters`,
+      contact: `**man contact**
+Usage: contact | email | hire
+Displays contact information with clickable email link (mailto).
+Also shows LinkedIn and portfolio links.
+Aliases: email, hire`
     };
     const page = manPages[q.toLowerCase()];
     if (page) {
@@ -995,19 +1501,39 @@ Displays portfolio blog links and Medium profile.`
 
   if (head === 'help' || head === '?') {
     const helpText = `Available commands:
-- projects [--flag]     — Project highlights. Use --work, --personal, --ml, etc.
+
+**Filesystem navigation:**
+- ls [path]             — List directory contents (directories shown in **bold/**)
+- cd <dir>              — Change directory (cd projects, cd .., cd ~)
+- pwd                   — Print working directory
+- cat <file>            — Display file contents
+
+**Quick commands:**
 - resume                — Snapshot of roles, education, certs.
+- projects [--flag]     — Project highlights. Use --work, --personal, --ml, etc.
+- experience [--flag]   — Filter roles (e.g., experience --game).
+- education             — Academic background & teaching roles.
+- music                 — Covers & YouTube links.
+- certs                 — Recent certifications.
 - achievements          — Key wins & milestones.
 - blogs                 — Portfolio blogs & Medium profile.
-- music                 — Covers & YouTube links.
 - linkedin              — Open LinkedIn profile.
-- experience [--flag]   — Filter roles (e.g., experience --game).
 - skills                — Core stacks & focus areas.
-- certs                 — Recent certifications.
+- contact               — Let's get in touch!
 - open <section>        — home | about | projects | blogs | resume | music | contact
+- activities            — Music, leadership, sports & clubs (college).
 - clear                 — Clear the terminal.
 - man <command>         — Show detailed usage for a command.
-Tip: Links in responses are clickable. Use "man projects" to see all flags.`;
+
+**Shortcuts:**
+- Tab                   — Autocomplete commands (proj + Tab → projects)
+- Ctrl+R                — Search command history (fuzzy search)
+- Ctrl+L                — Clear screen
+- | grep <keyword>      — Filter any output (e.g., projects | grep ml)
+
+**Try this:** ls → cd projects → ls → cat <project-name>
+
+Tip: All commands support piping. Try "resume | grep google" or "cat resume | grep aws".`;
     lastAnswerMD = helpText;
     printAssistant(helpText);
     return;
@@ -1032,11 +1558,15 @@ Tip: Links in responses are clickable. Use "man projects" to see all flags.`;
       "",
       "**Education**",
       bullets(KB.education.map(ed=>`${ed.school} — ${ed.program} (${ed.timeline})`)),
+      "",
+      "*Disclaimer: This is just a snapshot. Please visit the link below for full details.*",
+      "",
       `- Full resume: [${SECTION_LINKS.resume}](${SECTION_LINKS.resume})`,
       `- Portfolio: [${SITE_URL}](${SITE_URL})`
     ].join('\n');
     lastAnswerMD = summary;
     printAssistant(summary);
+    printSys('Tip: Try `experience` for full work history, `education` for degrees, or `skills` for tech stack');
     return;
   }
 
@@ -1046,6 +1576,7 @@ Tip: Links in responses are clickable. Use "man projects" to see all flags.`;
     printAssistant(body);
     return;
   }
+
 
   if (head === 'agentic') {
     const body = agenticFocusAnswer();
@@ -1068,9 +1599,45 @@ Tip: Links in responses are clickable. Use "man projects" to see all flags.`;
     return;
   }
 
+  if (head === 'education') {
+    const body = [
+      "**Education**",
+      '',
+      ...KB.education.map(edu => [
+        `**${edu.school}** | ${edu.location}`,
+        `${edu.program}${edu.minor ? ` (Minor: ${edu.minor})` : ''}`,
+        `${edu.timeline} • GPA: ${edu.gpa}`,
+        edu.roles ? bullets(edu.roles) : '',
+        ''
+      ].filter(Boolean).join('\n')),
+      `**More:** [View full resume](${KB.siteSections.resume})`
+    ].join('\n');
+    lastAnswerMD = body;
+    printAssistant(body);
+    printSys('Tip: Use `cd education` to explore individual degrees, or `cat nyu-masters` for detailed info');
+    return;
+  }
+
   if (head === 'linkedin') {
     window.open(KB.socials.linkedin, '_blank');
     printAssistant(`Opening LinkedIn: [${KB.socials.linkedin}](${KB.socials.linkedin})`);
+    return;
+  }
+  
+  if (head === 'contact' || head === 'email' || head === 'hire') {
+    const subject = encodeURIComponent('Opportunity from Terminal Resume');
+    const body = encodeURIComponent('Hi Aashna,\n\nI came across your terminal resume and would love to discuss...\n\n');
+    const mailtoLink = `mailto:${KB.profile.email}?subject=${subject}&body=${body}`;
+    
+    printAssistant(`**Let's connect!**
+
+**Email:** [${KB.profile.email}](${mailtoLink})
+
+Other ways to reach me:
+- LinkedIn: [${KB.socials.linkedin}](${KB.socials.linkedin})
+- Portfolio: [${KB.socials.portfolio}](${KB.socials.portfolio})
+
+Looking forward to hearing from you!`);
     return;
   }
 
@@ -1088,6 +1655,7 @@ Tip: Links in responses are clickable. Use "man projects" to see all flags.`;
     ].join('\n');
     lastAnswerMD = body;
     printAssistant(body);
+    printSys('Tip: Try `cd projects` to browse all projects, or use `projects | grep <keyword>` to filter results');
     return;
   }
 
@@ -1105,6 +1673,7 @@ Tip: Links in responses are clickable. Use "man projects" to see all flags.`;
     ].join('\n');
     lastAnswerMD = body;
     printAssistant(body);
+    printSys('Tip: Navigate with `cd experience` to explore roles, or try `experience --ml` for ML-focused positions');
     return;
   }
 
@@ -1151,18 +1720,119 @@ Tip: Links in responses are clickable. Use "man projects" to see all flags.`;
 }
 
 /* ========= 4) Wire up UI ========= */
+const ALL_COMMANDS = ['help', 'ls', 'cd', 'pwd', 'cat', 'projects', 'resume', 'education', 'achievements', 
+  'blogs', 'music', 'linkedin', 'experience', 'skills', 'certs', 'contact', 'email', 
+  'hire', 'open', 'clear', 'man', 'whoami', 'work', 'wins'];
+
+function autocomplete(partial) {
+  const input = partial.trim();
+  const parts = input.split(' ');
+  
+  // If it's just a command, autocomplete commands
+  if (parts.length === 1) {
+    const matches = ALL_COMMANDS.filter(cmd => cmd.startsWith(input.toLowerCase()));
+    return matches.length === 1 ? matches[0] : null;
+  }
+  
+  // If it's "cd <partial>" or "cat <partial>", autocomplete paths
+  const cmd = parts[0].toLowerCase();
+  if ((cmd === 'cd' || cmd === 'cat') && parts.length === 2) {
+    const pathPartial = parts[1].toLowerCase();
+    const node = FS[currentPath];
+    
+    if (node && node.type === 'dir') {
+      const matches = node.contents.filter(item => item.startsWith(pathPartial));
+      if (matches.length === 1) {
+        return `${cmd} ${matches[0]}`;
+      }
+    }
+  }
+  
+  return null;
+}
+
+function showHistorySearch() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:9999;';
+  
+  const box = document.createElement('div');
+  box.style.cssText = 'background:#0e1419;border:1px solid rgba(243,209,150,0.3);border-radius:12px;padding:20px;width:min(600px,90vw);max-height:400px;overflow:auto;';
+  
+  const searchInput = document.createElement('input');
+  searchInput.placeholder = 'Search command history...';
+  searchInput.style.cssText = 'width:100%;background:#0b1116;border:1px solid rgba(243,209,150,0.2);color:var(--text);padding:10px;border-radius:8px;font:18px "Courier Prime",monospace;margin-bottom:12px;';
+  
+  const resultsList = document.createElement('div');
+  resultsList.style.cssText = 'max-height:300px;overflow:auto;';
+  
+  const renderResults = (query) => {
+    const filtered = history.filter(h => h.toLowerCase().includes(query.toLowerCase())).reverse().slice(0,10);
+    resultsList.innerHTML = filtered.map((h, i) => 
+      `<div style="padding:8px;cursor:pointer;border-radius:6px;margin:4px 0;background:${i===0?'rgba(243,209,150,0.1)':'transparent'}" data-cmd="${h.replace(/"/g,'&quot;')}">${escapeHTML(h)}</div>`
+    ).join('') || '<div style="color:var(--muted);padding:8px;">No matches</div>';
+  };
+  
+  searchInput.addEventListener('input', (e) => renderResults(e.target.value));
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      overlay.remove();
+      input.focus();
+    } else if (e.key === 'Enter') {
+      const first = resultsList.querySelector('[data-cmd]');
+      if (first) {
+        input.value = first.getAttribute('data-cmd');
+        overlay.remove();
+        input.focus();
+      }
+    }
+  });
+  
+  resultsList.addEventListener('click', (e) => {
+    const cmd = e.target.getAttribute('data-cmd');
+    if (cmd) {
+      input.value = cmd;
+      overlay.remove();
+      input.focus();
+    }
+  });
+  
+  box.append(searchInput, resultsList);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  
+  renderResults('');
+  searchInput.focus();
+  
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.remove();
+      input.focus();
+    }
+  });
+}
+
 input.addEventListener('keydown', (e)=>{
   if (e.key === 'Enter') {
     const v = input.value;
     handleCmd(v).finally(()=>{ input.value=''; });
+  } else if (e.key === 'Tab') {
+    e.preventDefault();
+    const completed = autocomplete(input.value);
+    if (completed) {
+      input.value = completed;
+    }
+  } else if (e.key === 'r' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    showHistorySearch();
+  } else if (e.key === 'l' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    clearTerm();
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
     if (histIdx > 0) { histIdx--; input.value = history[histIdx] || ''; setTimeout(()=>input.setSelectionRange(input.value.length, input.value.length)); }
   } else if (e.key === 'ArrowDown') {
     e.preventDefault();
     if (histIdx < history.length-1) { histIdx++; input.value = history[histIdx] || ''; } else { histIdx = history.length; input.value=''; }
-  } else if (e.key.toLowerCase() === 'k' && e.ctrlKey && e.shiftKey) {
-    e.preventDefault(); clearTerm();
   } else if (e.key === 'Escape') {
     input.focus();
   }
