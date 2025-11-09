@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Aashna • Terminal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg:#0b0f12; --panel:#0e1419; --text:#e6f1ff; --muted:#8aa0b3; --accent:#51d0ff; --link:#9be7ff; --danger:#ff7b7b; }
+    * { box-sizing: border-box }
+    html, body { height:100%; margin:0; background:var(--bg); color:var(--text); font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 16px; height:100%; display:flex; flex-direction:column; gap:12px }
+    header { display:flex; align-items:center; justify-content:space-between }
+    header .brand { color: var(--accent); font-weight:700; letter-spacing:.5px }
+    header .btns { display:flex; gap:8px }
+    button, .pill {
+      background: var(--panel); color:var(--text); border:1px solid #1c2733; border-radius:10px; padding:6px 10px; cursor:pointer;
+    }
+    button:hover, .pill:hover { border-color:#2b3a4e }
+    a { color: var(--link); text-decoration: underline }
+    .terminal {
+      flex:1; overflow:auto; background: radial-gradient(1200px 600px at 20% 10%, rgba(81,208,255,.06), transparent 40%) , linear-gradient(#0c1217,#0b0f12);
+      border:1px solid #13202c; border-radius:16px; padding:16px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02), 0 10px 30px rgba(0,0,0,.25);
+    }
+    .line { white-space:pre-wrap; word-break:break-word; margin: 0 0 8px 0 }
+    .sys { color: var(--muted) }
+    .user::before { content: "➜ "; color: var(--accent) }
+    .assistant { }
+    .danger { color: var(--danger) }
+    .prompt {
+      display:flex; gap:8px; background: var(--panel); border:1px solid #1c2733; border-radius:12px; padding:10px;
+      align-items:center
+    }
+    .prompt input {
+      flex:1; background:transparent; border:none; outline:none; color:var(--text); font:inherit
+    }
+    .caret { width:8px; height:1.2em; background:var(--text); animation: blink 1.2s steps(1) infinite; margin-left:2px }
+    @keyframes blink { 50% { opacity: 0 } }
+    .kbd { color:#b7c9d9; background:#0b1218; border:1px solid #1e2a35; border-radius:6px; padding:0 6px; margin:0 2px }
+    .footer { color:var(--muted); font-size:12px; text-align:center; opacity:.8 }
+    .right { float:right }
+    .small { font-size:12px }
+    .hidden { display:none }
+    dialog {
+      border:1px solid #213040; border-radius:14px; background:#0e1419; color:var(--text); padding:16px; width:min(600px, 92vw)
+    }
+    dialog::backdrop { background: rgba(0,0,0,.6) }
+    .row { display:flex; gap:8px; align-items:center; margin:8px 0 }
+    input[type="password"], input[type="text"] {
+      background:#0b1116; border:1px solid #1c2733; color:var(--text); border-radius:8px; padding:8px; width:100%; font:inherit
+    }
+    .badge { border:1px solid #1f2c3a; border-radius:999px; padding:2px 8px; color:#b8c6d8 }
+    .linkish { color:var(--link); cursor:pointer; text-decoration: underline }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Aashna ▓▒░ Terminal</div>
+    <div class="btns">
+      <span class="badge small">type <span class="kbd">help</span></span>
+      <button id="copyLast">Copy last</button>
+      <button id="settingsBtn">Settings</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+  </header>
+
+  <div id="term" class="terminal" aria-live="polite"></div>
+
+  <div class="prompt">
+    <span class="muted">guest@aashna</span>:<span class="muted">~</span>$&nbsp;
+    <input id="input" autocomplete="off" spellcheck="false" placeholder="ask what did you build at the Agents for Impact AI Arena?"/>
+    <div class="caret"></div>
+  </div>
+
+  <div class="footer small">↑/↓ history • <span class="kbd">Esc</span> focus • <span class="kbd">Ctrl</span>+<span class="kbd">K</span> clear • answers cite your resume / site</div>
+</div>
+
+<!-- Settings dialog -->
+<dialog id="settings">
+  <form method="dialog">
+    <h3>Settings</h3>
+    <div class="row">
+      <label style="width:160px">OpenAI API Key</label>
+      <input id="apiKey" type="password" placeholder="sk-..." />
+    </div>
+    <div class="row">
+      <label style="width:160px">Model</label>
+      <input id="model" type="text" value="gpt-4o-mini" />
+    </div>
+    <div class="row">
+      <label style="width:160px">Portfolio URL</label>
+      <input id="siteUrl" type="text" value="https://www.aashnakunk.com" />
+    </div>
+    <div class="row">
+      <label style="width:160px">Save key in browser?</label>
+      <span class="small">(for convenience; not secure)</span>
+    </div>
+    <menu style="display:flex; gap:8px; justify-content:flex-end">
+      <button value="cancel">Close</button>
+      <button id="saveSettings" value="default">Save</button>
+    </menu>
+  </form>
+  <p class="small">Tip: For security, use the tiny proxy below instead of storing your key in the browser.</p>
+</dialog>
+
+<script>
+/* ========= 1) Hard-code your resume here (paste real content) ========= */
+const RESUME_MD = `
+# Aashna Kunkolienker — Resume (snapshot)
+**Role:** Associate AI Engineer @ Searce • **Focus:** Agentic AI on Google Cloud (ADK), connectors (ServiceNow, Aha!, Snowflake), RAG, BigQuery, governance  
+**Highlights:** Top-5 finalist at Google Cloud Agents for Impact Arena (team AI-mmunity) presenting at Google Cloud Next ‘26
+
+## Skills
+- Agentic AI: Google ADK/Agent Engine, multi-agent orchestration, RAG, embeddings
+- Data & Cloud: GCP (Vertex AI, BigQuery), Snowflake, AWS (SageMaker), Kubernetes
+- Connectors: ServiceNow CSM, Aha!, Snowflake (ACL-aware ingestion, schema profiling)
+- Languages: Python, TypeScript, SQL
+
+## Experience
+- **Associate AI Engineer — Searce (2025—present)**
+  - Built enterprise search + connectors (ServiceNow, Aha!, Snowflake) with ACL-aware governance.
+  - Designed Snowflake NL2SQL agent (Gemini Enterprise) using schema profiling + value dictionaries.
+  - Customer demos, architecture diagrams, and PoCs for agentic AI workloads on GCP.
+- **Research & Projects (selected)**
+  - **AI-mmunity (Top-5)** — Community health & wellness multi-agent framework; led agentic layer (ADK) and data governance.
+  - **Interior Design Assistant** — ADK-based furniture recommender; image placement + BigQuery embeddings.
+  - **USDM 4.0 Clinical Trial Extractor** — LLM extraction to USDM JSON with nested relations.
+  - **Spiritual AI Companion** — Multi-avatar devotional/horoscope AI with Node/Tailwind & Gemini.
+
+## Education
+- **NYU Tandon** — MS Computer Engineering (2025)
+
+## Certifications
+- Google Cloud PMLE (2025), Generative AI Leader (2025), AWS ML-Specialty (2024), NVIDIA NCA-AIIO (2025), CCNA (2023)
+
+## Links
+- Portfolio: https://www.aashnakunk.com
+- GitHub: https://github.com/aashnakunk
+`;
+
+/* Optional: simple “site map” to turn sections into links */
+const SECTION_LINKS = {
+  about: "https://www.aashnakunk.com/about",
+  projects: "https://www.aashnakunk.com/projects",
+  resume: "https://www.aashnakunk.com/resume",
+  talks: "https://www.aashnakunk.com/talks",
+  blog: "https://www.aashnakunk.com/blog",
+  contact: "https://www.aashnakunk.com/contact"
+};
+
+/* ========= 2) Minimal terminal shell ========= */
+const term = document.getElementById('term');
+const input = document.getElementById('input');
+const clearBtn = document.getElementById('clearBtn');
+const copyBtn = document.getElementById('copyLast');
+const settingsBtn = document.getElementById('settingsBtn');
+const dlg = document.getElementById('settings');
+const apiKeyEl = document.getElementById('apiKey');
+const modelEl = document.getElementById('model');
+const siteEl = document.getElementById('siteUrl');
+const saveSettingsBtn = document.getElementById('saveSettings');
+
+let history = JSON.parse(localStorage.getItem('hist')||'[]');
+let histIdx = history.length;
+let lastAnswerMD = "";
+let state = {
+  apiKey: localStorage.getItem('openai_key') || "",
+  model: localStorage.getItem('model') || "gpt-4o-mini",
+  siteUrl: localStorage.getItem('site_url') || "https://www.aashnakunk.com"
+};
+
+function printSys(text){ addLine(text, 'sys'); }
+function printUser(text){ addLine(text, 'user'); }
+function printAssistant(md){ addLine(renderMarkdown(md), 'assistant'); }
+function addLine(text, cls=''){ const div=document.createElement('div'); div.className=`line ${cls}`; div.innerHTML=text; term.appendChild(div); term.scrollTop=term.scrollHeight; }
+function clearTerm(){ term.innerHTML=''; showWelcome(); }
+function showWelcome(){
+  printSys("Aashna Terminal • recruiter Q&A\n");
+  printSys("Try:");
+  printSys("  ask what did you build at the Agents for Impact AI Arena?");
+  printSys("  resume");
+  printSys("  projects snowflake");
+  printSys("  open projects");
+}
+function renderMarkdown(md){
+  // extremely tiny MD renderer: bold, links, bullets, code
+  let html = md
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/^- (.+)$/gm,'• $1')
+    .replace(/\[(.+?)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  return html;
+}
+
+/* ========= 3) Command routing ========= */
+async function handleCmd(raw){
+  const cmd = raw.trim();
+  if(!cmd) return;
+
+  history.push(cmd); localStorage.setItem('hist', JSON.stringify(history)); histIdx = history.length;
+  printUser(cmd);
+
+  const [head, ...rest] = cmd.split(' ');
+  const q = rest.join(' ').trim();
+
+  if (head === 'help' || head === '?') {
+    printAssistant(`Available commands:
+- ask <question>        — Ask about Aashna’s work, skills, projects.
+- projects [filter]     — Quick list from resume; filter by word (e.g., projects snowflake).
+- resume                — Compact resume summary with a link.
+- open <section>        — about | projects | resume | talks | blog | contact
+- clear                 — Clear the terminal.`);
+    return;
+  }
+  if (head === 'clear' || (head==='cls')) { clearTerm(); return; }
+
+  if (head === 'open') {
+    if (!q) { printAssistant("Usage: open <about|projects|resume|talks|blog|contact>"); return; }
+    const key = q.toLowerCase();
+    const url = SECTION_LINKS[key] || `${state.siteUrl}`;
+    window.open(url, '_blank');
+    printAssistant(`Opening <${url}>`);
+    return;
+  }
+
+  if (head === 'resume') {
+    printAssistant(`**Resume (compact)**
+- Associate AI Engineer @ Searce — Agentic AI (ADK), connectors (ServiceNow, Aha!, Snowflake), GCP, BigQuery, RAG
+- Top-5 finalist: Google Cloud Agents for Impact Arena (AI-mmunity)
+- MS, Computer Engineering — NYU Tandon (2025)
+- Skills: Python, TypeScript, SQL, Vertex AI, Kubernetes
+- [Portfolio](${state.siteUrl}) • [Resume](${SECTION_LINKS.resume || state.siteUrl})`);
+    return;
+  }
+
+  if (head === 'projects') {
+    const filter = q.toLowerCase();
+    const lines = [
+      `**AI-mmunity (Top-5)** — multi-agent framework; agentic layer on ADK. [Projects](${SECTION_LINKS.projects || state.siteUrl})`,
+      `**Enterprise Search & Connectors** — ServiceNow, Aha!, Snowflake with ACL governance. [Projects](${SECTION_LINKS.projects || state.siteUrl})`,
+      `**Snowflake NL2SQL Agent** — schema profiling + value dictionaries. [Projects](${SECTION_LINKS.projects || state.siteUrl})`,
+      `**Interior Design Assistant** — BigQuery embeddings + placement. [Projects](${SECTION_LINKS.projects || state.siteUrl})`,
+      `**USDM 4.0 Extractor** — LLM → USDM JSON with relations. [Projects](${SECTION_LINKS.projects || state.siteUrl})`
+    ].filter(x => !filter || x.toLowerCase().includes(filter));
+    printAssistant(lines.join('\n'));
+    return;
+  }
+
+  if (head === 'ask') {
+    if (!state.apiKey) {
+      printAssistant("No API key set. Click **Settings** (top-right) to add your OpenAI key.");
+      return;
+    }
+    if (!q) { printAssistant("Usage: ask <your question>"); return; }
+    try {
+      printSys("thinking…");
+      const answer = await askLLM(q);
+      lastAnswerMD = answer;
+      printAssistant(answer);
+    } catch (e) {
+      printAssistant(`**Error**: ${e.message || e}`);
+    }
+    return;
+  }
+
+  // Fallback: treat as ask
+  const implicit = cmd;
+  if (state.apiKey) {
+    printSys("interpreting as question…");
+    try {
+      const answer = await askLLM(implicit);
+      lastAnswerMD = answer;
+      printAssistant(answer);
+    } catch(e) {
+      printAssistant(`**Error**: ${e.message || e}`);
+    }
+  } else {
+    printAssistant("Unknown command. Type `help`.");
+  }
+}
+
+/* ========= 4) OpenAI call (Chat Completions) ========= */
+async function askLLM(question){
+  const sys = `
+You are "Aashna Terminal", a concise recruiter-facing assistant.
+Answer ONLY using the provided RESUME and LINKS. If unsure, say so and suggest opening the portfolio page.
+Rules:
+- Use bullet points.
+- Be precise about role, impact, tech.
+- Add 1–3 short, descriptive links to the portfolio when useful.
+- Return plain markdown (no HTML).
+Portfolio base: ${state.siteUrl}
+Known sections: ${Object.entries(SECTION_LINKS).map(([k,v])=>`${k}: ${v}`).join(', ')}
+RESUME:
+${RESUME_MD}
+  `.trim();
+
+  const body = {
+    model: state.model || "gpt-4o-mini",
+    messages: [
+      { role: "system", content: sys },
+      { role: "user", content: question }
+    ],
+    temperature: 0.2,
+    max_tokens: 500
+  };
+
+  // If you run a local proxy, swap the URL below to '/api/chat'
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${state.apiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`OpenAI error ${res.status}: ${text}`);
+  }
+  const data = await res.json();
+  const md = data.choices?.[0]?.message?.content?.trim();
+  if (!md) throw new Error("No content returned.");
+  return md;
+}
+
+/* ========= 5) Wire up UI ========= */
+input.addEventListener('keydown', (e)=>{
+  if (e.key === 'Enter') {
+    const v = input.value;
+    input.value = '';
+    handleCmd(v);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (histIdx > 0) { histIdx--; input.value = history[histIdx] || ''; setTimeout(()=>input.setSelectionRange(input.value.length, input.value.length)); }
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (histIdx < history.length-1) { histIdx++; input.value = history[histIdx] || ''; } else { histIdx = history.length; input.value=''; }
+  } else if (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault(); clearTerm();
+  } else if (e.key === 'Escape') {
+    input.focus();
+  }
+});
+clearBtn.addEventListener('click', clearTerm);
+copyBtn.addEventListener('click', ()=>{
+  if (!lastAnswerMD) { printSys("nothing to copy yet."); return; }
+  navigator.clipboard.writeText(lastAnswerMD).then(()=>printSys("copied."), ()=>printSys("copy failed."));
+});
+settingsBtn.addEventListener('click', ()=> {
+  apiKeyEl.value = state.apiKey;
+  modelEl.value = state.model;
+  siteEl.value = state.siteUrl;
+  dlg.showModal();
+});
+saveSettingsBtn.addEventListener('click', (e)=>{
+  e.preventDefault();
+  state.apiKey = apiKeyEl.value.trim();
+  state.model = modelEl.value.trim() || "gpt-4o-mini";
+  state.siteUrl = siteEl.value.trim() || "https://www.aashnakunk.com";
+  // Persist key & prefs (optional)
+  localStorage.setItem('openai_key', state.apiKey);
+  localStorage.setItem('model', state.model);
+  localStorage.setItem('site_url', state.siteUrl);
+  dlg.close();
+  printSys("settings saved.");
+});
+
+window.addEventListener('load', ()=>{
+  input.focus();
+  showWelcome();
+});
+</script>
+</body>
+</html>
